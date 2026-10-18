@@ -6,10 +6,129 @@
     "reported_device": "Redmi Watch 5 Lite",
     "source": "user_reported"
   },
-  "updated_at": "2026-10-18T12:06:38-03:00",
+  "updated_at": "2026-10-18",
   "exercise_catalog": [],
   "daily_activity": [],
   "sessions": [
+    {
+      "id": "2026-10-14-191052-pilates-01",
+      "created_at": "2026-10-18",
+      "updated_at": "2026-10-18",
+      "automatic": {
+        "source": "mi_fitness_screenshot",
+        "started_at_local": "2026-10-14T19:10:52",
+        "date_precision": "second",
+        "timezone_visible": null,
+        "activity": "Pilates",
+        "duration_seconds": 3469,
+        "active_calories_kcal": 177,
+        "total_calories_kcal": 243,
+        "device": "Redmi Watch 5 Lite",
+        "heart_rate": {
+          "average_bpm": 93,
+          "max_bpm": 130,
+          "samples": [],
+          "curve_note": "La captura muestra la curva de frecuencia cardíaca durante 00:57:49, pero no presenta valores numéricos por punto; no se reconstruye la serie.",
+          "evidence_id": "img-2026-10-14-01"
+        },
+        "zones": [
+          {
+            "name": "Ligero",
+            "seconds": 1348,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "Intensivo",
+            "seconds": 95,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "Aeróbico",
+            "seconds": 0,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "Anaeróbico",
+            "seconds": 0,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "VO₂ max",
+            "seconds": 0,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          }
+        ],
+        "training_effect": [
+          {
+            "key": "vitality_score",
+            "label": "Puntuación de Vitalidad",
+            "value": 1,
+            "unit": null,
+            "scale": null,
+            "note": "Visible como +1 en la sección Efecto del entrenamiento."
+          }
+        ],
+        "extra_metrics": [],
+        "visible_text": "Pilates · 2026/10/14 19:10:52 · 177 kcal · tiempo 00:57:49 · 243 kcal totales · FC media 93 lpm · FC máxima 130 lpm · Ligero 00:22:28 · Intensivo 00:01:35 · Aeróbico 00:00:00 · Anaeróbico 00:00:00 · VO₂ max 00:00:00 · Puntuación de Vitalidad +1 · Redmi Watch 5 Lite.",
+        "uncertainties": [],
+        "evidence": [
+          {
+            "id": "img-2026-10-14-01",
+            "path": null,
+            "sha256": "c76a5ebb6c4adf43733665400487ddcdda3cdcaf1f64c11cacd3815262cd3598",
+            "description": "Captura de resumen de Mi Fitness enviada por el usuario. La imagen no se almacena en el repositorio público."
+          }
+        ]
+      },
+      "manual": {
+        "source": "user_reported",
+        "performed_at_local": null,
+        "activity": null,
+        "device": null,
+        "feeling": null,
+        "rpe": null,
+        "context": {
+          "sleep_hours": null,
+          "sleep_quality": null,
+          "stress": null,
+          "energy": null,
+          "fatigue": null,
+          "discomfort": null,
+          "notes": null
+        },
+        "exercises": [],
+        "extra_metrics": [],
+        "original_text": null
+      },
+      "audit": [
+        {
+          "at": "2026-10-18",
+          "action": "create_session",
+          "reason": "Sesión creada desde una captura de Mi Fitness enviada por el usuario.",
+          "changes": [
+            "Fecha y hora visibles",
+            "Actividad",
+            "Duración",
+            "Calorías de actividad y totales",
+            "FC media y máxima",
+            "Tiempo por zonas",
+            "Puntuación de Vitalidad",
+            "Dispositivo visible"
+          ]
+        }
+      ],
+      "notes": "No se guardó la captura en el repositorio público; solo su hash SHA-256 para detectar duplicados."
+    },
     {
       "id": "2026-10-15-200528-functional-01",
       "created_at": "2026-10-18T10:50:00-03:00",
