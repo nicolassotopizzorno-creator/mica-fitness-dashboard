@@ -11,6 +11,120 @@
   "daily_activity": [],
   "sessions": [
     {
+      "id": "2026-10-13-195322-functional-01",
+      "created_at": "2026-10-18",
+      "updated_at": "2026-10-18",
+      "automatic": {
+        "source": "mi_fitness_screenshot",
+        "started_at_local": "2026-10-13T19:53:22",
+        "date_precision": "second",
+        "timezone_visible": null,
+        "activity": "Entrenamiento funcional",
+        "duration_seconds": 6068,
+        "active_calories_kcal": 339,
+        "total_calories_kcal": 468,
+        "device": "Redmi Watch 5 Lite",
+        "heart_rate": {
+          "average_bpm": 96,
+          "max_bpm": 154,
+          "samples": [],
+          "curve_note": "Curva visible, sin valores por punto.",
+          "evidence_id": "img-2026-10-13-01"
+        },
+        "zones": [
+          {
+            "name": "Ligero",
+            "seconds": 2448,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "Intensivo",
+            "seconds": 456,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "Aeróbico",
+            "seconds": 139,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "Anaeróbico",
+            "seconds": 4,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "VO₂ max",
+            "seconds": 0,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          }
+        ],
+        "training_effect": [
+          {
+            "key": "vitality_score",
+            "label": "Puntuación de Vitalidad",
+            "value": 4,
+            "unit": null,
+            "scale": null,
+            "note": "Visible como +4."
+          }
+        ],
+        "extra_metrics": [],
+        "visible_text": "Entrenamiento funcional · 2026/10/13 19:53:22 · 339 kcal · 01:41:08 · 468 kcal totales · FC media 96 lpm · FC máxima 154 lpm · Ligero 00:40:48 · Intensivo 00:07:36 · Aeróbico 00:02:19 · Anaeróbico 00:00:04 · VO₂ max 00:00:00 · Vitalidad +4 · Redmi Watch 5 Lite.",
+        "uncertainties": [
+          "Las zonas visibles no cubren toda la duración."
+        ],
+        "evidence": [
+          {
+            "id": "img-2026-10-13-01",
+            "path": null,
+            "sha256": "c896a16c413ceab0226d72fb94319ed74f42194cbb198489c435a6218de38752",
+            "description": "Captura no publicada."
+          }
+        ]
+      },
+      "manual": {
+        "source": "user_reported",
+        "performed_at_local": null,
+        "activity": null,
+        "device": null,
+        "feeling": null,
+        "rpe": null,
+        "context": {
+          "sleep_hours": null,
+          "sleep_quality": null,
+          "stress": null,
+          "energy": null,
+          "fatigue": null,
+          "discomfort": null,
+          "notes": null
+        },
+        "exercises": [],
+        "extra_metrics": [],
+        "original_text": null
+      },
+      "audit": [
+        {
+          "at": "2026-10-18",
+          "action": "create_session",
+          "reason": "Captura Mi Fitness",
+          "changes": [
+            "Datos automáticos visibles"
+          ]
+        }
+      ],
+      "notes": null
+    },
+    {
       "id": "2026-10-14-191052-pilates-01",
       "created_at": "2026-10-18",
       "updated_at": "2026-10-18",
