@@ -1,6 +1,6 @@
 # Mica · Entrenamientos
 
-Dashboard personal para celular publicado mediante GitHub Pages. El historial comienza con cero sesiones porque aún no se recibió la primera captura de Mi Fitness.
+Dashboard personal para celular publicado mediante GitHub Pages. El historial ya contiene la primera sesión registrada desde una captura de Mi Fitness.
 
 ## Archivos
 
