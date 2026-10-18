@@ -11,6 +11,440 @@
   "daily_activity": [],
   "sessions": [
     {
+      "id": "2026-09-17-1800-outdoor-run-01",
+      "created_at": "2026-10-18",
+      "updated_at": "2026-10-18",
+      "automatic": {
+        "source": "mi_fitness_screenshot",
+        "started_at_local": "2026-09-17T18:00",
+        "date_precision": "minute",
+        "timezone_visible": null,
+        "activity": "Correr al aire libre",
+        "duration_seconds": 1993,
+        "active_calories_kcal": 233,
+        "total_calories_kcal": 269,
+        "device": "Redmi Watch 5 Lite",
+        "heart_rate": {
+          "average_bpm": 146,
+          "max_bpm": 184,
+          "samples": [],
+          "curve_note": "Curva visible sin valores numéricos por punto.",
+          "evidence_id": "img-2026-09-17-1800-outdoor-run-01"
+        },
+        "zones": [
+          {
+            "name": "Ligero",
+            "seconds": 63,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "Intensivo",
+            "seconds": 414,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "Aeróbico",
+            "seconds": 857,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "Anaeróbico",
+            "seconds": 427,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "VO₂ max",
+            "seconds": 228,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          }
+        ],
+        "training_effect": [
+          {
+            "key": "vitality_score",
+            "label": "Puntuación de Vitalidad",
+            "value": 20,
+            "unit": null,
+            "scale": null,
+            "note": "Visible en captura."
+          }
+        ],
+        "extra_metrics": [
+          {
+            "key": "distance_km",
+            "label": "Distancia",
+            "value": 3.09,
+            "unit": "km"
+          },
+          {
+            "key": "pace_average",
+            "label": "Ritmo medio",
+            "value": "10:46",
+            "unit": "min/km"
+          },
+          {
+            "key": "pace_best",
+            "label": "Ritmo máximo",
+            "value": "7:03",
+            "unit": "min/km"
+          },
+          {
+            "key": "workout_steps",
+            "label": "Pasos del entrenamiento",
+            "value": 3733,
+            "unit": "pasos"
+          },
+          {
+            "key": "cadence_average",
+            "label": "Cadencia media",
+            "value": 112,
+            "unit": "pasos/min"
+          },
+          {
+            "key": "cadence_max",
+            "label": "Cadencia máxima",
+            "value": 176,
+            "unit": "pasos/min"
+          },
+          {
+            "key": "stride_average",
+            "label": "Zancada media",
+            "value": 73,
+            "unit": "cm"
+          },
+          {
+            "key": "stride_max",
+            "label": "Zancada máxima",
+            "value": 75,
+            "unit": "cm"
+          }
+        ],
+        "visible_text": "Correr al aire libre · 2026-09-17T18:00 · duración 1993 segundos · 233 kcal activas · 269 kcal totales · FC 146/184 lpm.",
+        "uncertainties": [
+          "Las zonas de FC no necesariamente cubren la duración completa.",
+          "Los pasos del entrenamiento no representan el total diario."
+        ],
+        "evidence": [
+          {
+            "id": "img-2026-09-17-1800-outdoor-run-01",
+            "path": null,
+            "sha256": null,
+            "description": "Captura Mi Fitness; original no almacenado en repositorio público."
+          }
+        ]
+      },
+      "manual": {
+        "source": "user_reported",
+        "performed_at_local": null,
+        "activity": null,
+        "device": null,
+        "feeling": null,
+        "rpe": null,
+        "context": {
+          "sleep_hours": null,
+          "sleep_quality": null,
+          "stress": null,
+          "energy": null,
+          "fatigue": null,
+          "discomfort": null,
+          "notes": null
+        },
+        "exercises": [],
+        "extra_metrics": [],
+        "original_text": null
+      },
+      "audit": [
+        {
+          "at": "2026-10-18",
+          "action": "create_session",
+          "reason": "Captura Mi Fitness enviada por Mica.",
+          "changes": [
+            "Métricas visibles"
+          ]
+        }
+      ],
+      "notes": "Pasos de sesión separados de actividad diaria."
+    },
+    {
+      "id": "2026-09-17-1932-walk-01",
+      "created_at": "2026-10-18",
+      "updated_at": "2026-10-18",
+      "automatic": {
+        "source": "mi_fitness_screenshot",
+        "started_at_local": "2026-09-17T19:32",
+        "date_precision": "minute",
+        "timezone_visible": null,
+        "activity": "Caminar",
+        "duration_seconds": 450,
+        "active_calories_kcal": 28,
+        "total_calories_kcal": 37,
+        "device": "Redmi Watch 5 Lite",
+        "heart_rate": {
+          "average_bpm": 111,
+          "max_bpm": 135,
+          "samples": [],
+          "curve_note": "Curva visible sin valores numéricos por punto.",
+          "evidence_id": "img-2026-09-17-1932-walk-01"
+        },
+        "zones": [
+          {
+            "name": "Ligero",
+            "seconds": 262,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "Intensivo",
+            "seconds": 134,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "Aeróbico",
+            "seconds": 12,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "Anaeróbico",
+            "seconds": 0,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "VO₂ max",
+            "seconds": 0,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          }
+        ],
+        "training_effect": [],
+        "extra_metrics": [
+          {
+            "key": "distance_km",
+            "label": "Distancia",
+            "value": 0.628,
+            "unit": "km"
+          },
+          {
+            "key": "pace_average",
+            "label": "Ritmo medio",
+            "value": "11:56",
+            "unit": "min/km"
+          },
+          {
+            "key": "pace_best",
+            "label": "Ritmo máximo",
+            "value": "11:26",
+            "unit": "min/km"
+          },
+          {
+            "key": "workout_steps",
+            "label": "Pasos del entrenamiento",
+            "value": 805,
+            "unit": "pasos"
+          },
+          {
+            "key": "cadence_average",
+            "label": "Cadencia media",
+            "value": 107,
+            "unit": "pasos/min"
+          },
+          {
+            "key": "cadence_max",
+            "label": "Cadencia máxima",
+            "value": 129,
+            "unit": "pasos/min"
+          },
+          {
+            "key": "stride_average",
+            "label": "Zancada media",
+            "value": 66,
+            "unit": "cm"
+          },
+          {
+            "key": "stride_max",
+            "label": "Zancada máxima",
+            "value": 67,
+            "unit": "cm"
+          }
+        ],
+        "visible_text": "Caminar · 2026-09-17T19:32 · duración 450 segundos · 28 kcal activas · 37 kcal totales · FC 111/135 lpm.",
+        "uncertainties": [
+          "Las zonas de FC no necesariamente cubren la duración completa.",
+          "Los pasos del entrenamiento no representan el total diario."
+        ],
+        "evidence": [
+          {
+            "id": "img-2026-09-17-1932-walk-01",
+            "path": null,
+            "sha256": null,
+            "description": "Captura Mi Fitness; original no almacenado en repositorio público."
+          }
+        ]
+      },
+      "manual": {
+        "source": "user_reported",
+        "performed_at_local": null,
+        "activity": null,
+        "device": null,
+        "feeling": null,
+        "rpe": null,
+        "context": {
+          "sleep_hours": null,
+          "sleep_quality": null,
+          "stress": null,
+          "energy": null,
+          "fatigue": null,
+          "discomfort": null,
+          "notes": null
+        },
+        "exercises": [],
+        "extra_metrics": [],
+        "original_text": null
+      },
+      "audit": [
+        {
+          "at": "2026-10-18",
+          "action": "create_session",
+          "reason": "Captura Mi Fitness enviada por Mica.",
+          "changes": [
+            "Métricas visibles"
+          ]
+        }
+      ],
+      "notes": "Pasos de sesión separados de actividad diaria."
+    },
+    {
+      "id": "2026-09-17-201450-functional-01",
+      "created_at": "2026-10-18",
+      "updated_at": "2026-10-18",
+      "automatic": {
+        "source": "mi_fitness_screenshot",
+        "started_at_local": "2026-09-17T20:14:50",
+        "date_precision": "second",
+        "timezone_visible": null,
+        "activity": "Entrenamiento funcional",
+        "duration_seconds": 4926,
+        "active_calories_kcal": 282,
+        "total_calories_kcal": 384,
+        "device": "Redmi Watch 5 Lite",
+        "heart_rate": {
+          "average_bpm": 99,
+          "max_bpm": 127,
+          "samples": [],
+          "curve_note": "Curva visible sin valores numéricos por punto.",
+          "evidence_id": "img-2026-09-17-201450-functional-01"
+        },
+        "zones": [
+          {
+            "name": "Ligero",
+            "seconds": 2799,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "Intensivo",
+            "seconds": 369,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "Aeróbico",
+            "seconds": 0,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "Anaeróbico",
+            "seconds": 0,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          },
+          {
+            "name": "VO₂ max",
+            "seconds": 0,
+            "percent": null,
+            "lower_bpm": null,
+            "upper_bpm": null
+          }
+        ],
+        "training_effect": [
+          {
+            "key": "vitality_score",
+            "label": "Puntuación de Vitalidad",
+            "value": 1,
+            "unit": null,
+            "scale": null,
+            "note": "Visible en captura."
+          }
+        ],
+        "extra_metrics": [],
+        "visible_text": "Entrenamiento funcional · 2026-09-17T20:14:50 · duración 4926 segundos · 282 kcal activas · 384 kcal totales · FC 99/127 lpm.",
+        "uncertainties": [
+          "Las zonas de FC no necesariamente cubren la duración completa.",
+          "Los pasos del entrenamiento no representan el total diario."
+        ],
+        "evidence": [
+          {
+            "id": "img-2026-09-17-201450-functional-01",
+            "path": null,
+            "sha256": null,
+            "description": "Captura Mi Fitness; original no almacenado en repositorio público."
+          }
+        ]
+      },
+      "manual": {
+        "source": "user_reported",
+        "performed_at_local": null,
+        "activity": null,
+        "device": null,
+        "feeling": null,
+        "rpe": null,
+        "context": {
+          "sleep_hours": null,
+          "sleep_quality": null,
+          "stress": null,
+          "energy": null,
+          "fatigue": null,
+          "discomfort": null,
+          "notes": null
+        },
+        "exercises": [],
+        "extra_metrics": [],
+        "original_text": null
+      },
+      "audit": [
+        {
+          "at": "2026-10-18",
+          "action": "create_session",
+          "reason": "Captura Mi Fitness enviada por Mica.",
+          "changes": [
+            "Métricas visibles"
+          ]
+        }
+      ],
+      "notes": "Pasos de sesión separados de actividad diaria."
+    },
+    {
       "id": "2026-09-19-1600-outdoor-run-01",
       "created_at": "2026-10-18",
       "updated_at": "2026-10-18",
