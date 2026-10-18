@@ -27,7 +27,7 @@ function secondaryCards(){
   const s=db.sessions;if(!s.length)return '';
   const vals=fn=>s.map(fn).filter(number);
   let out='';
-  const kcal=vals(x=>auto(x).active_calories_kcal);if(kcal.length)out+=metric('Calorías de actividad',fmt(sum(kcal)),'kcal',kcal.length<s.length?'Total parcial':kcal.length+' sesiones');
+  const kcal=vals(x=>auto(x).active_calories_kcal);if(kcal.length)out+=metric('Calorías de actividad',fmt(sum(kcal)),'kcal',kcal.length<s.length?'Total parcial':kcal.length+' '+(kcal.length===1?'sesión':'sesiones'));
   const peaks=vals(x=>auto(x).heart_rate?.max_bpm);if(peaks.length)out+=metric('FC máxima registrada',fmt(Math.max(...peaks)),'lpm');
   const rpe=vals(x=>manual(x).rpe);if(rpe.length)out+=metric('Esfuerzo percibido',fmt(sum(rpe)/rpe.length,1),'/ 10',rpe.length+' sesiones');
   const v=volume(s);if(number(v.value))out+=metric(v.complete?'Volumen registrado':'Volumen parcial',fmt(v.value),'kg·rep');
