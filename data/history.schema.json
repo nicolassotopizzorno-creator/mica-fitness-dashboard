@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Historial Mica",
+  "type": "object",
+  "required": ["schema_version", "profile", "sessions", "exercise_catalog"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"type": "object", "properties": {"source": {"const": "user_reported"}}},
+    "updated_at": {"type": ["string", "null"]},
+    "exercise_catalog": {"type": "array", "items": {"type": "object", "required": ["id", "name"], "properties": {"id": {"type": "string"}, "name": {"type": "string"}, "family_id": {"type": ["string", "null"]}, "aliases": {"type": "array", "items": {"type": "string"}}, "equipment": {"type": ["string", "null"]}, "normalization_note": {"type": ["string", "null"]}}}},
+    "sessions": {"type": "array", "items": {"$ref": "#/$defs/session"}}
+  },
+  "$defs": {
+    "text": {"type": ["string", "null"]},
+    "nonnegative": {"type": ["number", "null"], "minimum": 0},
+    "count": {"type": ["integer", "null"], "minimum": 0},
+    "date": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2}(:\\d{2})?)?$"},
+    "metric": {"type": "object", "required": ["key", "label", "value"], "properties": {"key": {"type": "string"}, "label": {"type": "string"}, "value": {"type": ["number", "string", "boolean", "null"]}, "unit": {"$ref": "#/$defs/text"}, "scale": {"$ref": "#/$defs/text"}, "note": {"$ref": "#/$defs/text"}}},
+    "set": {"type": "object", "properties": {
+      "set_count": {"type": ["integer", "null"], "minimum": 1},
+      "reps": {"$ref": "#/$defs/count"},
+      "load_kg": {"$ref": "#/$defs/nonnegative"},
+      "load_basis": {"enum": ["total_external", "per_hand", "machine", "bodyweight", "unknown", null]},
+      "load_original": {"$ref": "#/$defs/text"},
+      "duration_seconds": {"$ref": "#/$defs/nonnegative"},
+      "duration_kind": {"enum": ["set_duration", "time_under_tension", null]},
+      "rest_seconds": {"$ref": "#/$defs/nonnegative"},
+      "notes": {"$ref": "#/$defs/text"}
+    }},
+    "exercise": {"type": "object", "required": ["id", "name_original", "sets"], "properties": {
+      "id": {"type": "string", "minLength": 1},
+      "catalog_id": {"$ref": "#/$defs/text"},
+      "family_id": {"$ref": "#/$defs/text"},
+      "name": {"$ref": "#/$defs/text"},
+      "name_original": {"type": "string", "minLength": 1},
+      "normalization_note": {"$ref": "#/$defs/text"},
+      "muscle_groups": {"type": "array", "items": {"type": "string"}},
+      "sets": {"type": "array", "items": {"$ref": "#/$defs/set"}},
+      "notes": {"$ref": "#/$defs/text"}
+    }},
+    "session": {"type": "object", "required": ["id", "automatic", "manual"], "properties": {
+      "id": {"type": "string", "minLength": 1},
+      "created_at": {"$ref": "#/$defs/text"},
+      "updated_at": {"$ref": "#/$defs/text"},
+      "automatic": {"type": "object", "required": ["source"], "properties": {
+        "source": {"const": "mi_fitness_screenshot"},
+        "started_at_local": {"$ref": "#/$defs/date"},
+        "date_precision": {"enum": ["day", "minute", "second", null]},
+        "timezone_visible": {"$ref": "#/$defs/text"},
+        "activity": {"$ref": "#/$defs/text"},
+        "duration_seconds": {"$ref": "#/$defs/nonnegative"},
+        "active_calories_kcal": {"$ref": "#/$defs/nonnegative"},
+        "total_calories_kcal": {"$ref": "#/$defs/nonnegative"},
+        "device": {"$ref": "#/$defs/text"},
+        "heart_rate": {"type": "object", "properties": {
+          "average_bpm": {"$ref": "#/$defs/nonnegative"}, "max_bpm": {"$ref": "#/$defs/nonnegative"},
+          "curve_note": {"$ref": "#/$defs/text"}, "evidence_id": {"$ref": "#/$defs/text"},
+          "samples": {"type": "array", "items": {"type": "object", "required": ["elapsed_seconds", "bpm"], "properties": {"elapsed_seconds": {"type": "number", "minimum": 0}, "bpm": {"type": "number", "minimum": 0}}}}
+        }},
+        "zones": {"type": "array", "items": {"type": "object", "required": ["name"], "properties": {"name": {"type": "string"}, "seconds": {"$ref": "#/$defs/nonnegative"}, "percent": {"type": ["number", "null"], "minimum": 0, "maximum": 100}, "lower_bpm": {"$ref": "#/$defs/nonnegative"}, "upper_bpm": {"$ref": "#/$defs/nonnegative"}}}},
+        "training_effect": {"type": "array", "items": {"$ref": "#/$defs/metric"}},
+        "extra_metrics": {"type": "array", "items": {"$ref": "#/$defs/metric"}},
+        "visible_text": {"$ref": "#/$defs/text"},
+        "uncertainties": {"type": "array", "items": {"type": "string"}},
+        "evidence": {"type": "array", "items": {"type": "object", "required": ["id", "sha256"], "properties": {"id": {"type": "string"}, "path": {"$ref": "#/$defs/text"}, "sha256": {"type": "string"}, "description": {"$ref": "#/$defs/text"}}}}
+      }},
+      "manual": {"type": "object", "required": ["source", "exercises"], "properties": {
+        "source": {"const": "user_reported"},
+        "performed_at_local": {"$ref": "#/$defs/date"},
+        "activity": {"$ref": "#/$defs/text"}, "device": {"$ref": "#/$defs/text"},
+        "feeling": {"$ref": "#/$defs/text"},
+        "rpe": {"type": ["number", "null"], "minimum": 1, "maximum": 10},
+        "original_text": {"$ref": "#/$defs/text"},
+        "context": {"type": "object", "properties": {"sleep_hours": {"type": ["number", "null"], "minimum": 0, "maximum": 24}, "sleep_quality": {"$ref": "#/$defs/text"}, "stress": {"$ref": "#/$defs/text"}, "energy": {"$ref": "#/$defs/text"}, "fatigue": {"$ref": "#/$defs/text"}, "discomfort": {"$ref": "#/$defs/text"}, "notes": {"$ref": "#/$defs/text"}}},
+        "exercises": {"type": "array", "items": {"$ref": "#/$defs/exercise"}},
+        "extra_metrics": {"type": "array", "items": {"$ref": "#/$defs/metric"}}
+      }},
+      "audit": {"type": "array", "items": {"type": "object", "properties": {"at": {"type": "string"}, "action": {"type": "string"}, "reason": {"type": "string"}, "changes": {"type": "array"}}}},
+      "notes": {"$ref": "#/$defs/text"}
+    }}
+  }
+}

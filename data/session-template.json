@@ -1,0 +1,37 @@
+{
+  "id": null,
+  "created_at": null,
+  "updated_at": null,
+  "automatic": {
+    "source": "mi_fitness_screenshot",
+    "started_at_local": null,
+    "date_precision": null,
+    "timezone_visible": null,
+    "activity": null,
+    "duration_seconds": null,
+    "active_calories_kcal": null,
+    "total_calories_kcal": null,
+    "heart_rate": {"average_bpm": null, "max_bpm": null, "samples": [], "curve_note": null, "evidence_id": null},
+    "zones": [],
+    "training_effect": [],
+    "device": null,
+    "extra_metrics": [],
+    "evidence": [],
+    "visible_text": null,
+    "uncertainties": []
+  },
+  "manual": {
+    "source": "user_reported",
+    "performed_at_local": null,
+    "activity": null,
+    "device": null,
+    "feeling": null,
+    "rpe": null,
+    "context": {"sleep_hours": null, "sleep_quality": null, "stress": null, "energy": null, "fatigue": null, "discomfort": null, "notes": null},
+    "exercises": [],
+    "extra_metrics": [],
+    "original_text": null
+  },
+  "audit": [],
+  "notes": null
+}
