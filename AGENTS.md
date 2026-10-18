@@ -16,6 +16,10 @@ Este repositorio es la fuente de verdad. GitHub Pages publica dist/ desde main. 
 - Para el resumen diario, agrupar sesiones por fecha sin fusionarlas: cantidad, duración y calorías de actividad sumadas, FC máxima observada. La FC media diaria solo se calcula ponderada por duración cuando todas las sesiones del día tienen duración positiva y FC media conocida.
 - Las zonas se acumulan entre sesiones solo si todas tienen los mismos nombres y límites BPM explícitos. No sumar puntuaciones de efecto del entrenamiento. Comparar la última actividad con la anterior del mismo tipo; no equiparar Pilates con gimnasio. Mostrar diferencias sin calificarlas como mejora o empeoramiento.
 
+## Escritura robusta en GitHub
+
+- Si una escritura en GitHub falla por conflicto de versión/SHA o por un error transitorio, volver a leer inmediatamente el archivo actual y su SHA, comprobar que la sesión o el dato no se haya creado en el intento anterior y reintentar una vez de forma segura. No crear duplicados ni dar por perdida la carga sin verificar primero el estado final del repositorio.
+
 ## Interfaz y publicación
 
 - Nombre visible: Mica. Vista vertical única, sin filtros de fecha y optimizada para celular. Tarjetas solo con valores reales; barras diarias pueden tener una fecha; tendencias necesitan al menos dos puntos. El volumen exige series × repeticiones × carga externa total conocida y se marca como parcial cuando corresponde.
