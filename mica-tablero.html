@@ -17,21 +17,23 @@ h2{font:700 20px/1.3 Manrope,system-ui;letter-spacing:-.4px;margin:0 0 17px}h3{f
 .section{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;margin:16px 0;overflow:hidden}.section.compact{padding:18px}
 .section-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}.section-head small,.muted{font-size:11px;color:var(--muted)}
 .metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:5px 0 19px}.metric{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:17px 15px;min-width:0}.metric .label{font-size:11px;color:var(--muted)}.metric .value{font:700 clamp(24px,6vw,31px) Manrope,system-ui;line-height:1.2;margin:7px 0;color:var(--dark)}.metric .value small{font:600 12px 'DM Sans',sans-serif}.metric .note{font-size:10px;color:var(--muted);line-height:1.35}
-.daily-charts{display:grid;grid-template-columns:1fr;gap:0}.daily-charts .section{margin:0 0 12px}
-.bar-row{display:grid;grid-template-columns:56px minmax(0,1fr) 73px;gap:9px;align-items:center;padding:8px 0}.bar-date{font-size:11px;color:var(--muted)}.bar-track{height:12px;border-radius:20px;background:#f3eeee;overflow:hidden;display:flex}.bar-fill{height:100%;background:var(--accent);border-radius:20px;min-width:2px}.bar-fill+.bar-fill{border-radius:0}.bar-number{text-align:right;font-size:11px;font-weight:700;white-space:nowrap}.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px;font-size:10px;color:var(--muted)}.legend i{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px}
-.partial-note{font-size:10px;color:var(--muted);margin:8px 0 0}
+.primary-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.primary-metrics .metric{padding:13px 8px;border-radius:12px}.primary-metrics .metric .label{font-size:10px;line-height:1.25;min-height:25px}.primary-metrics .metric .value{font-size:22px;margin:5px 0 0}.primary-metrics .metric .value small{font-size:11px}
+.evolution{padding-bottom:0}.metric-switch{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-bottom:16px}.metric-switch button{border:1px solid var(--line);background:#faf7f5;border-radius:9px;padding:10px 6px;color:var(--muted);font-size:11px;font-weight:700;white-space:nowrap}.metric-switch button[aria-pressed="true"]{background:var(--accent-light);border-color:#c9aeb6;color:#674a53}
+#evolutionPlot{min-width:0}.evolution-chart{display:block;width:100%;height:auto;max-height:238px}.evolution-axis{display:flex;justify-content:space-between;gap:6px;margin:0 10px;color:var(--muted);font-size:10px}.evolution-axis span:nth-child(2){color:#9b938e}.evolution-latest{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-top:15px;padding:12px 0;border-top:1px solid var(--line)}.evolution-latest span{color:var(--muted);font-size:11px}.evolution-latest strong{font:700 15px Manrope,system-ui;text-align:right}.evolution-table{margin:0 0 18px}
+.day-compare{border-top:1px solid var(--line);margin:12px -20px 0;padding:17px 20px 20px;background:#fbf8f6}.day-compare-heading{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.day-compare-heading h3{margin:0}.day-compare-heading span{color:var(--muted);font-size:10px;white-space:nowrap}.day-compare-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:13px}.day-compare-card{min-width:0;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:11px}.day-compare-card small{display:block;color:var(--muted);font-size:10px}.day-compare-card strong{display:block;font:700 15px/1.25 Manrope,system-ui;margin:6px 0;overflow-wrap:anywhere}.day-compare-card span{display:block;color:var(--accent);font-size:10px;line-height:1.3}
 .activity-day{border-top:1px solid var(--line);padding:14px 0}.activity-day:first-of-type{border-top:0}.activity-day strong{font-size:13px}.activity-day small{font-size:11px;color:var(--muted);display:block;margin-top:3px}
+.workout-disclosure{margin:16px 0;padding:0;font-size:inherit;color:inherit}.workout-disclosure summary{display:flex;align-items:center;gap:9px;padding:19px 20px;list-style:none}.workout-disclosure summary::-webkit-details-marker{display:none}.workout-disclosure summary>span:first-child{font:700 20px/1.3 Manrope,system-ui;letter-spacing:-.4px;flex:1}.workout-disclosure summary small{font-size:10px;color:var(--muted)}.disclosure-arrow{font-size:21px;color:var(--accent);line-height:1;transition:transform .15s}.workout-disclosure[open] .disclosure-arrow{transform:rotate(180deg)}.workout-list{padding:0 20px 7px;border-top:1px solid var(--line)}
 .session{border:0;background:none;display:flex;width:100%;justify-content:space-between;gap:10px;text-align:left;align-items:center;color:inherit;padding:11px 0 0}.session span{min-width:0}.session b{font-size:13px}.session small{display:block;color:var(--muted);font-size:11px;margin-top:3px}.session .arrow{font-size:18px;color:var(--accent);flex:none}
 .compare{border-top:1px solid var(--line);padding:10px 0;display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:7px;align-items:center}.compare:first-child{border-top:0}.compare span{font-size:11px;color:var(--muted)}.compare strong{font-size:12px;font-weight:600;text-align:right;min-width:0;overflow-wrap:anywhere}.compare-heading{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:7px;padding-bottom:9px}.compare-heading span{text-align:right;font-size:10px;color:var(--muted)}.compare-heading span:first-child{text-align:left}
 .effect-row,.week-row{border-top:1px solid var(--line);padding:12px 0}.effect-row:first-of-type,.week-row:first-of-type{border-top:0}.effect-row{display:flex;justify-content:space-between;gap:14px;align-items:baseline}.effect-row strong{font-size:13px}.effect-row small{display:block;font-size:10px;color:var(--muted);margin-top:3px}.effect-value{color:var(--accent);font:700 20px Manrope,system-ui}.week-row strong{font-size:12px}.week-metrics{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}.week-metrics span{font-size:10px;padding:6px 8px;border-radius:20px;background:#f7eff1}
+.effect-caption{font-size:12px;font-weight:700;color:var(--dark);margin-bottom:5px}.effect-switch{margin-bottom:15px}
 .zone{margin:13px 0}.zone-title{display:flex;justify-content:space-between;font-size:12px;gap:10px}.zone-title strong{white-space:nowrap}.zone-bar{height:8px;background:#f4eeee;border-radius:10px;margin-top:6px;overflow:hidden}.zone-bar span{display:block;height:100%;background:var(--accent);border-radius:10px}
-.step-track{position:relative;height:11px;background:#f3eeee;border-radius:20px}.step-track .bar-fill{position:absolute;left:0;top:0}.goal-mark{position:absolute;height:17px;width:2px;background:var(--dark);top:-3px}.step-row{display:grid;grid-template-columns:56px minmax(0,1fr) 88px;gap:9px;align-items:center;margin:12px 0}.step-row small{text-align:right;font-size:10px;color:var(--muted)}
 .chart{width:100%;height:155px}.chart-wrap{margin-top:6px}.chart-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:10px}details{font-size:11px;color:var(--muted);margin-top:13px}summary{cursor:pointer}.scroll{overflow:auto;max-width:100%}table{width:100%;border-collapse:collapse;font-size:11px}th,td{text-align:left;border-bottom:1px solid var(--line);padding:9px 5px;white-space:nowrap}th{color:var(--muted);font-weight:500}
 .exercise-select{width:100%;padding:10px;border:1px solid var(--line);background:white;border-radius:8px;color:var(--dark)}.group-list{display:flex;flex-wrap:wrap;gap:7px}.group-list span{font-size:11px;border-radius:20px;background:#f7eff1;padding:7px 10px}
 .empty{padding:44px 20px;text-align:center}.empty h2{margin-bottom:9px}.empty p{font-size:13px;color:var(--muted);line-height:1.6;margin:0}
 footer{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid var(--line);padding:24px 0 30px;margin-top:24px;font-size:11px;color:var(--muted)}
 dialog{border:1px solid var(--line);border-radius:18px;padding:27px 20px;max-width:610px;width:calc(100% - 24px);max-height:88vh;background:var(--paper);color:var(--dark)}dialog::backdrop{background:#332b2ca8}dialog h2{padding-right:25px}dialog p{font-size:13px;line-height:1.6;color:var(--muted)}.close{position:absolute;top:14px;right:14px;background:#f7eff1;border:0;border-radius:50%;width:30px;height:30px;font-size:20px;color:var(--dark)}.detail-group{margin:22px 0}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.detail-grid div{border-bottom:1px solid var(--line);padding:8px 0}.detail-grid small{font-size:10px;color:var(--muted);display:block;margin-bottom:4px}.detail-grid strong{font-size:13px;font-weight:600}.tag{display:inline-block;font-size:10px;color:var(--accent);margin-bottom:9px}.context{white-space:pre-wrap}.evidence{max-width:100%;border-radius:8px}
-@media(min-width:700px){.site-header{height:82px;padding:0 28px}main{padding:0 28px}.page-title{padding:43px 0 24px}.metrics{grid-template-columns:repeat(4,minmax(0,1fr))}.daily-charts{grid-template-columns:1fr 1fr;gap:14px}.daily-charts .section{margin:0}.section{padding:25px;margin:19px 0}.bar-row{grid-template-columns:64px minmax(0,1fr) 85px}dialog{padding:35px}}
+@media(min-width:700px){.site-header{height:82px;padding:0 28px}main{padding:0 28px}.page-title{padding:43px 0 24px}.metrics{grid-template-columns:repeat(4,minmax(0,1fr))}.primary-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.primary-metrics.has-steps{grid-template-columns:repeat(4,minmax(0,1fr))}.primary-metrics .metric{padding:17px 15px}.primary-metrics .metric .label{min-height:0}.primary-metrics .metric .value{font-size:31px}.section{padding:25px;margin:19px 0}.metric-switch{grid-template-columns:repeat(4,max-content)}.metric-switch button{padding:10px 16px}.day-compare{margin:18px -25px 0;padding:19px 25px 24px}.day-compare-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.workout-disclosure summary{padding:24px 25px}.workout-list{padding:0 25px 8px}dialog{padding:35px}}
 @media(prefers-reduced-motion:no-preference){button{transition:opacity .15s}button:hover{opacity:.75}}
 </style>
 </head>
@@ -141,6 +143,42 @@ function dailyTraining(sessions){
     return row;
   }).sort((a,b)=>a.date.localeCompare(b.date));
 }
+function evolutionSeries(sessions,dailyActivity=[]){
+  const days=dailyTraining(sessions);
+  const points=(rows,value)=>rows.map(row=>({date:row.date,value:value(row)}));
+  return {
+    time:points(days.filter(d=>d.duration_complete&&number(d.duration_seconds)),d=>d.duration_seconds),
+    sessions:points(days,d=>d.count),
+    steps:points(dailyActivity.filter(d=>d.date&&number(d.steps?.value)).sort((a,b)=>a.date.localeCompare(b.date)),d=>d.steps.value),
+    calories:points(days.filter(d=>d.calories_complete&&number(d.active_calories_kcal)),d=>d.active_calories_kcal)
+  };
+}
+function latestDayComparison(sessions,dailyActivity=[]){
+  const days=dailyTraining(sessions);
+  if(days.length<2)return null;
+  const current=days.at(-1),previous=days.at(-2);
+  const byDate=new Map(dailyActivity.map(d=>[d.date,d]));
+  const steps=d=>byDate.get(d.date)?.steps?.value;
+  return {current:current.date,previous:previous.date,metrics:{
+    sessions:[current.count,previous.count],
+    time:current.duration_complete&&previous.duration_complete?[current.duration_seconds,previous.duration_seconds]:null,
+    steps:number(steps(current))&&number(steps(previous))?[steps(current),steps(previous)]:null,
+    calories:current.calories_complete&&previous.calories_complete?[current.active_calories_kcal,previous.active_calories_kcal]:null
+  }};
+}
+function trainingEffectSeries(sessions){
+  const groups=new Map();
+  for(const session of sessions){
+    const date=sessionDay(session);if(!date)continue;
+    for(const effect of auto(session).training_effect||[]){
+      if(!number(effect.value))continue;
+      const key=JSON.stringify([effect.key||effect.label,effect.unit??null,effect.scale??null]);
+      if(!groups.has(key))groups.set(key,{key,label:effect.label,unit:effect.unit??null,scale:effect.scale??null,points:[]});
+      groups.get(key).points.push({date,value:effect.value,session_id:session.id,activity:activityName(session)});
+    }
+  }
+  return [...groups.values()].map(group=>({...group,points:group.points.sort((a,b)=>a.date.localeCompare(b.date)||String(a.session_id).localeCompare(String(b.session_id)))}));
+}
 function latestComparable(sessions){
   const ordered=sessions.filter(sessionDate).sort((a,b)=>sessionDate(b).localeCompare(sessionDate(a)));
   if(ordered.length<2)return null;
@@ -184,12 +222,12 @@ function metric(label,value,suffix='',note=''){return '<article class="metric"><
 function mainCards(days){
   const s=db.sessions,steps=[...(db.daily_activity||[])].filter(d=>number(d.steps?.value)).sort((a,b)=>b.date.localeCompare(a.date));
   let out='';
-  if(days.length)out+=metric('Días activos',days.length,'','Con entrenamientos registrados');
+  if(days.length)out+=metric('Días activos',days.length);
   if(s.length)out+=metric('Sesiones',s.length);
   const seconds=s.map(x=>auto(x).duration_seconds).filter(number);
   if(seconds.length)out+=metric('Horas entrenadas',fmt(sum(seconds)/3600,1),'h',seconds.length<s.length?'Total parcial':'');
   if(steps.length){const last=steps[0],goal=last.step_goal?.value;out+=metric('Últimos pasos',fmt(last.steps.value),'',date(last.date)+(number(goal)?' · Meta '+fmt(goal):''));}
-  return out?'<div class="metrics">'+out+'</div>':'';
+  return out?'<div class="metrics primary-metrics'+(steps.length?' has-steps':'')+'">'+out+'</div>':'';
 }
 function secondaryCards(){
   const s=db.sessions;if(!s.length)return '';
@@ -201,35 +239,68 @@ function secondaryCards(){
   const v=volume(s);if(number(v.value))out+=metric(v.complete?'Volumen registrado':'Volumen parcial',fmt(v.value),'kg·rep');
   return out?section('Otros indicadores','<div class="metrics">'+out+'</div>','compact'):'';
 }
-function barRows(days,selector,valueLabel,stacked=false){
-  const max=Math.max(...days.map(selector).filter(number),1);
-  const colors=['#966f79','#c699a3','#d7b5a8','#b5a1a9','#c1afa2'];
-  return days.map(day=>{
-    const value=selector(day);if(!number(value))return '';
-    let bar='<span class="bar-fill" style="width:'+Math.max(2,value/max*100)+'%"></span>';
-    if(stacked&&day.sessions.length){
-      const known=day.sessions.filter(s=>number(auto(s).duration_seconds));
-      bar=known.map((s,i)=>'<span class="bar-fill" style="width:'+(auto(s).duration_seconds/max*100)+'%;background:'+colors[i%colors.length]+'" title="'+escape(activityName(s)+' · '+duration(auto(s).duration_seconds))+'"></span>').join('');
-    }
-    return '<div class="bar-row"><span class="bar-date">'+escape(dayLabel(day.date))+'</span><div class="bar-track">'+bar+'</div><span class="bar-number">'+escape(valueLabel(value,day))+'</span></div>';
+const evolutionMetrics=[
+  {key:'time',label:'Tiempo activo',format:v=>duration(v)},
+  {key:'sessions',label:'Sesiones',format:v=>fmt(v)+' '+(v===1?'sesión':'sesiones')},
+  {key:'steps',label:'Pasos',format:v=>fmt(v)+' pasos'},
+  {key:'calories',label:'Calorías',format:v=>fmt(v)+' kcal'}
+];
+let selectedEvolution='time';
+function evolutionChart(points,config){
+  const W=500,H=190,L=11,R=11,T=20,B=13,plotW=W-L-R,plotH=H-T-B;
+  const times=points.map(p=>Date.parse(p.date+'T12:00:00Z'));
+  const minTime=times[0],span=times.at(-1)-minTime||1;
+  const max=Math.max(1,...points.map(p=>p.value)),ceiling=max*1.18;
+  const x=i=>points.length===1?L+plotW/2:L+(times[i]-minTime)/span*plotW;
+  const y=v=>T+plotH-v/ceiling*plotH;
+  const pointLabel=p=>date(p.date)+(p.activity?' · '+p.activity:'');
+  let svg='<svg class="evolution-chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+escape(config.label+' por fecha')+'"><title>'+escape(points.map(p=>pointLabel(p)+': '+config.format(p.value)).join('; '))+'</title>';
+  for(const ratio of [0,.5,1]){const yy=y(ceiling*ratio);svg+='<line x1="'+L+'" y1="'+yy+'" x2="'+(W-R)+'" y2="'+yy+'" stroke="#e9e1df" stroke-dasharray="3 5"/>';}
+  svg+='<polyline points="'+points.map((p,i)=>x(i)+','+y(p.value)).join(' ')+'" fill="none" stroke="#966f79" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>';
+  points.forEach((p,i)=>{svg+='<circle cx="'+x(i)+'" cy="'+y(p.value)+'" r="5" fill="#966f79" stroke="#fffdfa" stroke-width="2"><title>'+escape(pointLabel(p)+': '+config.format(p.value))+'</title></circle>';});
+  svg+='</svg>';
+  svg+='<div class="evolution-axis"><span>'+escape(dayLabel(points[0].date))+'</span><span>Fecha</span><span>'+escape(dayLabel(points.at(-1).date))+'</span></div>';
+  const last=points.at(-1);
+  const values='<div class="evolution-latest"><span>Último dato · '+escape(date(last.date))+'</span><strong>'+escape(config.format(last.value))+'</strong></div>';
+  const table='<details class="evolution-table"><summary>Ver valores por fecha</summary><div class="scroll"><table><thead><tr><th>Fecha</th><th>'+escape(config.label)+'</th></tr></thead><tbody>'+points.map(p=>'<tr><td>'+escape(pointLabel(p))+'</td><td>'+escape(config.format(p.value))+'</td></tr>').join('')+'</tbody></table></div></details>';
+  return svg+values+table;
+}
+function dayComparisonCompact(){
+  const pair=latestDayComparison(db.sessions,db.daily_activity||[]);if(!pair)return '';
+  const configurations=[
+    {key:'sessions',label:'Sesiones',format:v=>fmt(v)+' '+(v===1?'sesión':'sesiones'),delta:v=>fmt(v)+' '+(Math.abs(v)===1?'sesión':'sesiones')},
+    {key:'time',label:'Tiempo activo',format:duration,delta:duration},
+    {key:'steps',label:'Pasos',format:v=>fmt(v)+' pasos',delta:v=>fmt(v)+' pasos'},
+    {key:'calories',label:'Calorías de actividad',format:v=>fmt(v)+' kcal',delta:v=>fmt(v)+' kcal'}
+  ];
+  const cards=configurations.filter(c=>pair.metrics[c.key]).map(c=>{
+    const [current,previous]=pair.metrics[c.key],difference=current-previous;
+    const change=difference===0?'0 '+(c.key==='time'?'min':c.key==='sessions'?'sesiones':c.key==='steps'?'pasos':'kcal'):(difference>0?'+':'−')+c.delta(Math.abs(difference));
+    return '<div class="day-compare-card"><small>'+escape(c.label)+'</small><strong>'+escape(c.format(current))+'</strong><span>'+escape(change)+' vs '+escape(dayLabel(pair.previous))+'</span></div>';
   }).join('');
+  return '<div class="day-compare"><div class="day-compare-heading"><h3>Último día vs anterior</h3><span>'+escape(dayLabel(pair.current))+' · '+escape(dayLabel(pair.previous))+'</span></div><div class="day-compare-grid">'+cards+'</div></div>';
 }
-function dailyCharts(days){
-  if(!days.length)return '';
-  let html=section('Actividad por día',barRows(days,d=>d.count,v=>v+' '+(v===1?'sesión':'sesiones')));
-  if(days.some(d=>number(d.duration_seconds)))html+=section('Horas de actividad por día',barRows(days,d=>d.duration_seconds,(v,d)=>duration(v)+(d.duration_complete?'':'*'),true)+(days.some(d=>number(d.duration_seconds)&&!d.duration_complete)?'<p class="partial-note">* Tiempo parcial: alguna sesión no tiene duración registrada.</p>':''));
-  return '<div class="daily-charts">'+html+'</div>';
-}
-function stepsChart(){
-  const rows=(db.daily_activity||[]).filter(d=>number(d.steps?.value)).sort((a,b)=>a.date.localeCompare(b.date));
-  if(rows.length<2)return '';
-  const max=Math.max(1,...rows.map(d=>Math.max(d.steps.value,d.step_goal?.value||0)));
-  let html='';
-  for(const d of rows){
-    const goal=d.step_goal?.value;
-    html+='<div class="step-row"><span class="bar-date">'+escape(dayLabel(d.date))+'</span><div class="step-track"><span class="bar-fill" style="width:'+Math.max(2,d.steps.value/max*100)+'%"></span>'+(number(goal)?'<span class="goal-mark" style="left:'+Math.min(99,goal/max*100)+'%" title="Meta '+escape(fmt(goal))+'"></span>':'')+'</div><small>'+escape(fmt(d.steps.value))+(number(goal)?' / '+escape(fmt(goal)):'')+'</small></div>';
+function evolutionPanel(){
+  const series=evolutionSeries(db.sessions,db.daily_activity||[]);
+  const available=evolutionMetrics.filter(c=>series[c.key].length>=2);
+  const comparison=dayComparisonCompact();
+  if(!available.length&&!comparison)return '';
+  let body='';
+  if(available.length){
+    const active=available.find(c=>c.key===selectedEvolution)||available[0];
+    selectedEvolution=active.key;
+    body+='<div class="metric-switch" role="group" aria-label="Métrica de evolución">'+available.map(c=>'<button type="button" data-evolution="'+c.key+'" aria-pressed="'+(c.key===active.key)+'">'+escape(c.label)+'</button>').join('')+'</div><div id="evolutionPlot">'+evolutionChart(series[active.key],active)+'</div>';
   }
-  return section('Pasos diarios',html);
+  return section('Evolución',body+comparison,'evolution');
+}
+function bindEvolution(){
+  const series=evolutionSeries(db.sessions,db.daily_activity||[]);
+  document.querySelectorAll('[data-evolution]').forEach(button=>button.onclick=()=>{
+    selectedEvolution=button.dataset.evolution;
+    document.querySelectorAll('[data-evolution]').forEach(other=>other.setAttribute('aria-pressed',String(other===button)));
+    const config=evolutionMetrics.find(c=>c.key===selectedEvolution);
+    $('#evolutionPlot').innerHTML=evolutionChart(series[selectedEvolution],config);
+  });
 }
 function sessionList(days){
   if(!days.length)return '';
@@ -241,7 +312,7 @@ function sessionList(days){
     }
     html+='</div>';
   }
-  return section('Mis entrenamientos',html);
+  return '<details class="section workout-disclosure"><summary><span>Últimos entrenamientos</span><small>'+db.sessions.length+' '+(db.sessions.length===1?'sesión':'sesiones')+'</small><span class="disclosure-arrow" aria-hidden="true">⌄</span></summary><div class="workout-list">'+html+'</div></details>';
 }
 function compareRows(headA,headB,rows){
   const valid=rows.filter(r=>r[1]!=null&&r[2]!=null);
@@ -275,13 +346,6 @@ function activityComparison(){
   const body=compareRows(dayLabel(sessionDay(a)),dayLabel(sessionDay(b)),rows);
   return body?section('Última actividad vs anterior · '+activityName(a),body):'';
 }
-function dayComparison(days){
-  if(days.length<2)return '';
-  const a=days.at(-1),b=days.at(-2);
-  const byDate=new Map((db.daily_activity||[]).map(d=>[d.date,d]));
-  const rows=[['Actividades',a.count,b.count],['Tiempo total',a.duration_complete?duration(a.duration_seconds):null,b.duration_complete?duration(b.duration_seconds):null],['Calorías de actividad',a.calories_complete?unit(a.active_calories_kcal,'kcal'):null,b.calories_complete?unit(b.active_calories_kcal,'kcal'):null],['FC máxima',unit(a.max_bpm,'lpm'),unit(b.max_bpm,'lpm')],['FC media ponderada',unit(a.average_bpm,'lpm'),unit(b.average_bpm,'lpm')],['Pasos',byDate.get(a.date)?.steps?.value,byDate.get(b.date)?.steps?.value]];
-  return section('Último día activo vs anterior',compareRows(dayLabel(a.date),dayLabel(b.date),rows));
-}
 function weeklyPanel(days){
   const allDays=new Set([...days.map(d=>d.date),...(db.daily_activity||[]).filter(d=>number(d.steps?.value)).map(d=>d.date)]);
   const weeks=weeklyActivity(db.sessions,db.daily_activity||[]);
@@ -304,7 +368,25 @@ function zonesPanel(sessions,individual=false){
 function effectsPanel(sessions,individual=false){
   const entries=sessions.flatMap(s=>(auto(s).training_effect||[]).filter(e=>e.value!=null).map(e=>({date:sessionDay(s),name:e.label,value:e.value,unit:e.unit,scale:e.scale})));
   if(!entries.length)return '';
-  return section('Efecto del entrenamiento',entries.map(e=>'<div class="effect-row"><span><strong>'+escape(e.name)+'</strong>'+(!individual?'<small>'+escape(date(e.date))+'</small>':'')+'</span><span class="effect-value">'+escape(e.value)+(e.unit?' '+escape(e.unit):'')+(e.scale?'<small> / '+escape(e.scale)+'</small>':'')+'</span></div>').join(''));
+  if(individual)return section('Efecto del entrenamiento',entries.map(e=>'<div class="effect-row"><span><strong>'+escape(e.name)+'</strong></span><span class="effect-value">'+escape(e.value)+(e.unit?' '+escape(e.unit):'')+(e.scale?'<small> / '+escape(e.scale)+'</small>':'')+'</span></div>').join(''));
+  const groups=trainingEffectSeries(sessions);if(!groups.length)return '';
+  const active=groups.find(g=>g.key===selectedEffect)||groups[0];selectedEffect=active.key;
+  const buttons=groups.length>1?'<div class="metric-switch effect-switch" role="group" aria-label="Tipo de efecto">'+groups.map(g=>'<button type="button" data-effect="'+escape(g.key)+'" aria-pressed="'+(g.key===active.key)+'">'+escape(g.label)+'</button>').join('')+'</div>':'';
+  return section('Efecto del entrenamiento',buttons+'<div id="effectPlot">'+effectChart(active)+'</div>');
+}
+let selectedEffect=null;
+function effectChart(group){
+  const config={label:group.label,format:v=>fmt(v,1)+(group.unit?' '+group.unit:'')};
+  return '<div class="effect-caption">'+escape(group.label)+(group.scale?' · '+escape(group.scale):'')+'</div>'+evolutionChart(group.points,config);
+}
+function bindEffect(){
+  const groups=trainingEffectSeries(db.sessions);
+  document.querySelectorAll('[data-effect]').forEach(button=>button.onclick=()=>{
+    selectedEffect=button.dataset.effect;
+    document.querySelectorAll('[data-effect]').forEach(other=>other.setAttribute('aria-pressed',String(other===button)));
+    const group=groups.find(g=>g.key===selectedEffect);
+    if(group)$('#effectPlot').innerHTML=effectChart(group);
+  });
 }
 function chart(title,points,unitName){
   const p=points.filter(x=>x.date&&number(x.value)).sort((a,b)=>a.date.localeCompare(b.date));
@@ -346,7 +428,6 @@ function renderExercise(){
 function extraTrends(days){
   if(days.length<2)return '';
   let out='';
-  out+=chart('Calorías de actividad por día',days.filter(d=>d.calories_complete).map(d=>({date:d.date,value:d.active_calories_kcal})),'kcal');
   out+=chart('FC máxima por día',days.map(d=>({date:d.date,value:d.max_bpm})),'lpm');
   out+=chart('FC media diaria ponderada',days.map(d=>({date:d.date,value:d.average_bpm})),'lpm');
   const rpe=db.sessions.map(s=>({date:sessionDate(s),value:manual(s).rpe}));
@@ -384,8 +465,10 @@ function render(){
   if(!db)return;
   const days=dailyTraining(db.sessions);
   if(!db.sessions.length&&!(db.daily_activity||[]).length){$('#content').innerHTML='<section class="section empty"><h2>Tu historia empieza acá</h2><p>Mandá tu primera captura o los pasos del día en este chat.</p></section>';return;}
-  let html=mainCards(days)+dailyCharts(days)+stepsChart()+activityComparison()+dayComparison(days)+sessionList(days)+weeklyPanel(days)+zonesPanel(db.sessions)+effectsPanel(db.sessions)+secondaryCards()+exercisePanel()+extraTrends(days);
+  let html=mainCards(days)+evolutionPanel()+sessionList(days)+activityComparison()+weeklyPanel(days)+zonesPanel(db.sessions)+effectsPanel(db.sessions)+secondaryCards()+exercisePanel()+extraTrends(days);
   $('#content').innerHTML=html;
+  bindEvolution();
+  bindEffect();
   document.querySelectorAll('[data-session]').forEach(b=>b.onclick=()=>showSession(db.sessions.find(s=>s.id===b.dataset.session)));
   if($('#exerciseSelect')){$('#exerciseSelect').onchange=renderExercise;renderExercise();}
 }
@@ -393,7 +476,7 @@ $('#how').onclick=()=>$('#guide').showModal();
 document.querySelectorAll('dialog .close').forEach(b=>b.onclick=()=>b.closest('dialog').close());
 $('#export').disabled=true;
 $('#export').onclick=()=>{if(!db)return;const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='mica-historial.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
-try{db={"schema_version":"1.1.0","profile":{"display_name":"Mica","reported_app":"Mi Fitness","reported_device":"Redmi Watch 5 Lite","source":"user_reported"},"updated_at":"2026-10-18T12:06:38-03:00","exercise_catalog":[],"daily_activity":[],"sessions":[{"id":"2026-10-15-200528-functional-01","created_at":"2026-10-18T10:50:00-03:00","updated_at":"2026-10-18T10:50:00-03:00","automatic":{"source":"mi_fitness_screenshot","started_at_local":"2026-10-15T20:05:28","date_precision":"second","timezone_visible":null,"activity":"Entrenamiento funcional","duration_seconds":3611,"active_calories_kcal":206,"total_calories_kcal":277,"device":"Redmi Watch 5 Lite","heart_rate":{"average_bpm":99,"max_bpm":140,"samples":[],"curve_note":"La captura muestra la curva de frecuencia cardíaca durante 01:00:11, pero no presenta valores numéricos por punto; no se reconstruye la serie.","evidence_id":"img-2026-10-15-01"},"zones":[{"name":"Ligero","seconds":1700,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Intensivo","seconds":473,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Aeróbico","seconds":14,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Anaeróbico","seconds":0,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"VO₂ max","seconds":0,"percent":null,"lower_bpm":null,"upper_bpm":null}],"training_effect":[{"key":"vitality_score","label":"Puntuación de Vitalidad","value":2,"unit":null,"scale":null,"note":"Visible como +2 en la sección Efecto del entrenamiento."}],"extra_metrics":[],"visible_text":"Entrenamiento funcional · 2026/10/15 20:05:28 · 206 kcal · tiempo 01:00:11 · 277 kcal totales · FC media 99 lpm · FC máxima 140 lpm · Ligero 00:28:20 · Intensivo 00:07:53 · Aeróbico 00:00:14 · Anaeróbico 00:00:00 · VO₂ max 00:00:00 · Puntuación de Vitalidad +2 · Redmi Watch 5 Lite.","uncertainties":[],"evidence":[{"id":"img-2026-10-15-01","path":null,"sha256":"22c6ea7cf4c225a76649e52e4c1d0622e99194efb34090e34ee89de4c54c5f05","description":"Captura de resumen de Mi Fitness enviada por el usuario. La imagen no se almacena en el repositorio público."}]},"manual":{"source":"user_reported","performed_at_local":null,"activity":null,"device":null,"feeling":null,"rpe":null,"context":{"sleep_hours":null,"sleep_quality":null,"stress":null,"energy":null,"fatigue":null,"discomfort":null,"notes":null},"exercises":[],"extra_metrics":[],"original_text":null},"audit":[{"at":"2026-10-18T10:50:00-03:00","action":"create_session","reason":"Primera sesión creada desde una captura de Mi Fitness enviada por el usuario.","changes":["Fecha y hora visibles","Actividad","Duración","Calorías de actividad y totales","FC media y máxima","Tiempo por zonas","Puntuación de Vitalidad","Dispositivo visible"]}],"notes":"No se guardó la captura en el repositorio público; solo su hash SHA-256 para detectar duplicados."}]};if(!Array.isArray(db.sessions)||!Array.isArray(db.daily_activity))throw new Error('schema');$('#status').textContent='';$('#export').disabled=false;render();}catch{$('#status').textContent='No se pudo cargar el historial. Volvé a abrir el tablero para reintentar.';}
+try{db={"schema_version":"1.1.0","profile":{"display_name":"Mica","reported_app":"Mi Fitness","reported_device":"Redmi Watch 5 Lite","source":"user_reported"},"updated_at":"2026-10-18","exercise_catalog":[],"daily_activity":[],"sessions":[{"id":"2026-09-17-1800-outdoor-run-01","created_at":"2026-10-18","updated_at":"2026-10-18","automatic":{"source":"mi_fitness_screenshot","started_at_local":"2026-09-17T18:00","date_precision":"minute","timezone_visible":null,"activity":"Correr al aire libre","duration_seconds":1993,"active_calories_kcal":233,"total_calories_kcal":269,"device":"Redmi Watch 5 Lite","heart_rate":{"average_bpm":146,"max_bpm":184,"samples":[],"curve_note":"Curva visible sin valores numéricos por punto.","evidence_id":"img-2026-09-17-1800-outdoor-run-01"},"zones":[{"name":"Ligero","seconds":63,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Intensivo","seconds":414,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Aeróbico","seconds":857,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Anaeróbico","seconds":427,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"VO₂ max","seconds":228,"percent":null,"lower_bpm":null,"upper_bpm":null}],"training_effect":[{"key":"vitality_score","label":"Puntuación de Vitalidad","value":20,"unit":null,"scale":null,"note":"Visible en captura."}],"extra_metrics":[{"key":"distance_km","label":"Distancia","value":3.09,"unit":"km"},{"key":"pace_average","label":"Ritmo medio","value":"10:46","unit":"min/km"},{"key":"pace_best","label":"Ritmo máximo","value":"7:03","unit":"min/km"},{"key":"workout_steps","label":"Pasos del entrenamiento","value":3733,"unit":"pasos"},{"key":"cadence_average","label":"Cadencia media","value":112,"unit":"pasos/min"},{"key":"cadence_max","label":"Cadencia máxima","value":176,"unit":"pasos/min"},{"key":"stride_average","label":"Zancada media","value":73,"unit":"cm"},{"key":"stride_max","label":"Zancada máxima","value":75,"unit":"cm"}],"visible_text":"Correr al aire libre · 2026-09-17T18:00 · duración 1993 segundos · 233 kcal activas · 269 kcal totales · FC 146/184 lpm.","uncertainties":["Las zonas de FC no necesariamente cubren la duración completa.","Los pasos del entrenamiento no representan el total diario."],"evidence":[{"id":"img-2026-09-17-1800-outdoor-run-01","path":null,"sha256":null,"description":"Captura Mi Fitness; original no almacenado en repositorio público."}]},"manual":{"source":"user_reported","performed_at_local":null,"activity":null,"device":null,"feeling":null,"rpe":null,"context":{"sleep_hours":null,"sleep_quality":null,"stress":null,"energy":null,"fatigue":null,"discomfort":null,"notes":null},"exercises":[],"extra_metrics":[],"original_text":null},"audit":[{"at":"2026-10-18","action":"create_session","reason":"Captura Mi Fitness enviada por Mica.","changes":["Métricas visibles"]}],"notes":"Pasos de sesión separados de actividad diaria."},{"id":"2026-09-17-1932-walk-01","created_at":"2026-10-18","updated_at":"2026-10-18","automatic":{"source":"mi_fitness_screenshot","started_at_local":"2026-09-17T19:32","date_precision":"minute","timezone_visible":null,"activity":"Caminar","duration_seconds":450,"active_calories_kcal":28,"total_calories_kcal":37,"device":"Redmi Watch 5 Lite","heart_rate":{"average_bpm":111,"max_bpm":135,"samples":[],"curve_note":"Curva visible sin valores numéricos por punto.","evidence_id":"img-2026-09-17-1932-walk-01"},"zones":[{"name":"Ligero","seconds":262,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Intensivo","seconds":134,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Aeróbico","seconds":12,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Anaeróbico","seconds":0,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"VO₂ max","seconds":0,"percent":null,"lower_bpm":null,"upper_bpm":null}],"training_effect":[],"extra_metrics":[{"key":"distance_km","label":"Distancia","value":0.628,"unit":"km"},{"key":"pace_average","label":"Ritmo medio","value":"11:56","unit":"min/km"},{"key":"pace_best","label":"Ritmo máximo","value":"11:26","unit":"min/km"},{"key":"workout_steps","label":"Pasos del entrenamiento","value":805,"unit":"pasos"},{"key":"cadence_average","label":"Cadencia media","value":107,"unit":"pasos/min"},{"key":"cadence_max","label":"Cadencia máxima","value":129,"unit":"pasos/min"},{"key":"stride_average","label":"Zancada media","value":66,"unit":"cm"},{"key":"stride_max","label":"Zancada máxima","value":67,"unit":"cm"}],"visible_text":"Caminar · 2026-09-17T19:32 · duración 450 segundos · 28 kcal activas · 37 kcal totales · FC 111/135 lpm.","uncertainties":["Las zonas de FC no necesariamente cubren la duración completa.","Los pasos del entrenamiento no representan el total diario."],"evidence":[{"id":"img-2026-09-17-1932-walk-01","path":null,"sha256":null,"description":"Captura Mi Fitness; original no almacenado en repositorio público."}]},"manual":{"source":"user_reported","performed_at_local":null,"activity":null,"device":null,"feeling":null,"rpe":null,"context":{"sleep_hours":null,"sleep_quality":null,"stress":null,"energy":null,"fatigue":null,"discomfort":null,"notes":null},"exercises":[],"extra_metrics":[],"original_text":null},"audit":[{"at":"2026-10-18","action":"create_session","reason":"Captura Mi Fitness enviada por Mica.","changes":["Métricas visibles"]}],"notes":"Pasos de sesión separados de actividad diaria."},{"id":"2026-09-17-201450-functional-01","created_at":"2026-10-18","updated_at":"2026-10-18","automatic":{"source":"mi_fitness_screenshot","started_at_local":"2026-09-17T20:14:50","date_precision":"second","timezone_visible":null,"activity":"Entrenamiento funcional","duration_seconds":4926,"active_calories_kcal":282,"total_calories_kcal":384,"device":"Redmi Watch 5 Lite","heart_rate":{"average_bpm":99,"max_bpm":127,"samples":[],"curve_note":"Curva visible sin valores numéricos por punto.","evidence_id":"img-2026-09-17-201450-functional-01"},"zones":[{"name":"Ligero","seconds":2799,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Intensivo","seconds":369,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Aeróbico","seconds":0,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Anaeróbico","seconds":0,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"VO₂ max","seconds":0,"percent":null,"lower_bpm":null,"upper_bpm":null}],"training_effect":[{"key":"vitality_score","label":"Puntuación de Vitalidad","value":1,"unit":null,"scale":null,"note":"Visible en captura."}],"extra_metrics":[],"visible_text":"Entrenamiento funcional · 2026-09-17T20:14:50 · duración 4926 segundos · 282 kcal activas · 384 kcal totales · FC 99/127 lpm.","uncertainties":["Las zonas de FC no necesariamente cubren la duración completa.","Los pasos del entrenamiento no representan el total diario."],"evidence":[{"id":"img-2026-09-17-201450-functional-01","path":null,"sha256":null,"description":"Captura Mi Fitness; original no almacenado en repositorio público."}]},"manual":{"source":"user_reported","performed_at_local":null,"activity":null,"device":null,"feeling":null,"rpe":null,"context":{"sleep_hours":null,"sleep_quality":null,"stress":null,"energy":null,"fatigue":null,"discomfort":null,"notes":null},"exercises":[],"extra_metrics":[],"original_text":null},"audit":[{"at":"2026-10-18","action":"create_session","reason":"Captura Mi Fitness enviada por Mica.","changes":["Métricas visibles"]}],"notes":"Pasos de sesión separados de actividad diaria."},{"id":"2026-09-19-1600-outdoor-run-01","created_at":"2026-10-18","updated_at":"2026-10-18","automatic":{"source":"mi_fitness_screenshot","started_at_local":"2026-09-19T16:00","date_precision":"minute","timezone_visible":null,"activity":"Correr al aire libre","duration_seconds":1323,"active_calories_kcal":145,"total_calories_kcal":168,"device":"Redmi Watch 5 Lite","heart_rate":{"average_bpm":142,"max_bpm":157,"samples":[],"curve_note":"Curva visible sin datos por muestra.","evidence_id":"img-2026-09-19-01"},"zones":[{"name":"Ligero","seconds":0,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Intensivo","seconds":162,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Aeróbico","seconds":1030,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Anaeróbico","seconds":125,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"VO₂ max","seconds":0,"percent":null,"lower_bpm":null,"upper_bpm":null}],"training_effect":[{"key":"vitality_score","label":"Puntuación de Vitalidad","value":7,"unit":null,"scale":null,"note":"Visible como +7."}],"extra_metrics":[{"key":"distance_km","label":"Distancia","value":2.85,"unit":"km"},{"key":"pace_average","label":"Ritmo medio","value":"7:44","unit":"min/km"},{"key":"pace_best","label":"Ritmo máximo","value":"6:37","unit":"min/km"},{"key":"workout_steps","label":"Pasos durante el entrenamiento","value":3172,"unit":"pasos","note":"No equivale a los pasos diarios."},{"key":"cadence_average","label":"Cadencia media","value":143,"unit":"pasos/min"},{"key":"cadence_max","label":"Cadencia máxima","value":178,"unit":"pasos/min"},{"key":"stride_average","label":"Zancada media","value":74,"unit":"cm"},{"key":"stride_max","label":"Zancada máxima","value":75,"unit":"cm"}],"visible_text":"Correr al aire libre · 19/09/2026 16:00 · 2,85 km · 00:22:03 · 145 kcal activas · 168 kcal totales · ritmo 7:44 min/km · FC media 142 · FC máxima 157 · 3172 pasos del entrenamiento · ligero 00:00:00 · intensivo 00:02:42 · aeróbico 00:17:10 · anaeróbico 00:02:05 · VO₂ max 00:00:00 · ritmo máximo 6:37 · cadencia 143/178 · zancada 74/75 cm · Vitalidad +7 · Redmi Watch 5 Lite.","uncertainties":["Pasos corresponden a la actividad y no al total diario.","Zonas visibles suman 21:57 frente a 22:03 de duración."],"evidence":[{"id":"img-2026-09-19-01","path":null,"sha256":"d7e0d137c4c6f36d6899c58869087102aa227ac3cdde758082b24095e8bdfb73","description":"Captura Mi Fitness; original no almacenado en repositorio público."}]},"manual":{"source":"user_reported","performed_at_local":null,"activity":null,"device":null,"feeling":null,"rpe":null,"context":{"sleep_hours":null,"sleep_quality":null,"stress":null,"energy":null,"fatigue":null,"discomfort":null,"notes":null},"exercises":[],"extra_metrics":[],"original_text":null},"audit":[{"at":"2026-10-18","action":"create_session","reason":"Captura de Mi Fitness enviada por Mica.","changes":["Actividad","Fecha","Distancia","Duración","Calorías","FC","Zonas","Ritmo","Pasos de sesión","Cadencia","Zancada","Vitalidad"]}],"notes":"Los pasos de la sesión no se agregan a daily_activity."},{"id":"2026-10-13-195322-functional-01","created_at":"2026-10-18","updated_at":"2026-10-18","automatic":{"source":"mi_fitness_screenshot","started_at_local":"2026-10-13T19:53:22","date_precision":"second","timezone_visible":null,"activity":"Entrenamiento funcional","duration_seconds":6068,"active_calories_kcal":339,"total_calories_kcal":468,"device":"Redmi Watch 5 Lite","heart_rate":{"average_bpm":96,"max_bpm":154,"samples":[],"curve_note":"Curva visible, sin valores por punto.","evidence_id":"img-2026-10-13-01"},"zones":[{"name":"Ligero","seconds":2448,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Intensivo","seconds":456,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Aeróbico","seconds":139,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Anaeróbico","seconds":4,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"VO₂ max","seconds":0,"percent":null,"lower_bpm":null,"upper_bpm":null}],"training_effect":[{"key":"vitality_score","label":"Puntuación de Vitalidad","value":4,"unit":null,"scale":null,"note":"Visible como +4."}],"extra_metrics":[],"visible_text":"Entrenamiento funcional · 2026/10/13 19:53:22 · 339 kcal · 01:41:08 · 468 kcal totales · FC media 96 lpm · FC máxima 154 lpm · Ligero 00:40:48 · Intensivo 00:07:36 · Aeróbico 00:02:19 · Anaeróbico 00:00:04 · VO₂ max 00:00:00 · Vitalidad +4 · Redmi Watch 5 Lite.","uncertainties":["Las zonas visibles no cubren toda la duración."],"evidence":[{"id":"img-2026-10-13-01","path":null,"sha256":"c896a16c413ceab0226d72fb94319ed74f42194cbb198489c435a6218de38752","description":"Captura no publicada."}]},"manual":{"source":"user_reported","performed_at_local":null,"activity":null,"device":null,"feeling":null,"rpe":null,"context":{"sleep_hours":null,"sleep_quality":null,"stress":null,"energy":null,"fatigue":null,"discomfort":null,"notes":null},"exercises":[],"extra_metrics":[],"original_text":null},"audit":[{"at":"2026-10-18","action":"create_session","reason":"Captura Mi Fitness","changes":["Datos automáticos visibles"]}],"notes":null},{"id":"2026-10-14-191052-pilates-01","created_at":"2026-10-18","updated_at":"2026-10-18","automatic":{"source":"mi_fitness_screenshot","started_at_local":"2026-10-14T19:10:52","date_precision":"second","timezone_visible":null,"activity":"Pilates","duration_seconds":3469,"active_calories_kcal":177,"total_calories_kcal":243,"device":"Redmi Watch 5 Lite","heart_rate":{"average_bpm":93,"max_bpm":130,"samples":[],"curve_note":"La captura muestra la curva de frecuencia cardíaca durante 00:57:49, pero no presenta valores numéricos por punto; no se reconstruye la serie.","evidence_id":"img-2026-10-14-01"},"zones":[{"name":"Ligero","seconds":1348,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Intensivo","seconds":95,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Aeróbico","seconds":0,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Anaeróbico","seconds":0,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"VO₂ max","seconds":0,"percent":null,"lower_bpm":null,"upper_bpm":null}],"training_effect":[{"key":"vitality_score","label":"Puntuación de Vitalidad","value":1,"unit":null,"scale":null,"note":"Visible como +1 en la sección Efecto del entrenamiento."}],"extra_metrics":[],"visible_text":"Pilates · 2026/10/14 19:10:52 · 177 kcal · tiempo 00:57:49 · 243 kcal totales · FC media 93 lpm · FC máxima 130 lpm · Ligero 00:22:28 · Intensivo 00:01:35 · Aeróbico 00:00:00 · Anaeróbico 00:00:00 · VO₂ max 00:00:00 · Puntuación de Vitalidad +1 · Redmi Watch 5 Lite.","uncertainties":[],"evidence":[{"id":"img-2026-10-14-01","path":null,"sha256":"c76a5ebb6c4adf43733665400487ddcdda3cdcaf1f64c11cacd3815262cd3598","description":"Captura de resumen de Mi Fitness enviada por el usuario. La imagen no se almacena en el repositorio público."}]},"manual":{"source":"user_reported","performed_at_local":null,"activity":null,"device":null,"feeling":null,"rpe":null,"context":{"sleep_hours":null,"sleep_quality":null,"stress":null,"energy":null,"fatigue":null,"discomfort":null,"notes":null},"exercises":[],"extra_metrics":[],"original_text":null},"audit":[{"at":"2026-10-18","action":"create_session","reason":"Sesión creada desde una captura de Mi Fitness enviada por el usuario.","changes":["Fecha y hora visibles","Actividad","Duración","Calorías de actividad y totales","FC media y máxima","Tiempo por zonas","Puntuación de Vitalidad","Dispositivo visible"]}],"notes":"No se guardó la captura en el repositorio público; solo su hash SHA-256 para detectar duplicados."},{"id":"2026-10-15-200528-functional-01","created_at":"2026-10-18T10:50:00-03:00","updated_at":"2026-10-18T10:50:00-03:00","automatic":{"source":"mi_fitness_screenshot","started_at_local":"2026-10-15T20:05:28","date_precision":"second","timezone_visible":null,"activity":"Entrenamiento funcional","duration_seconds":3611,"active_calories_kcal":206,"total_calories_kcal":277,"device":"Redmi Watch 5 Lite","heart_rate":{"average_bpm":99,"max_bpm":140,"samples":[],"curve_note":"La captura muestra la curva de frecuencia cardíaca durante 01:00:11, pero no presenta valores numéricos por punto; no se reconstruye la serie.","evidence_id":"img-2026-10-15-01"},"zones":[{"name":"Ligero","seconds":1700,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Intensivo","seconds":473,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Aeróbico","seconds":14,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"Anaeróbico","seconds":0,"percent":null,"lower_bpm":null,"upper_bpm":null},{"name":"VO₂ max","seconds":0,"percent":null,"lower_bpm":null,"upper_bpm":null}],"training_effect":[{"key":"vitality_score","label":"Puntuación de Vitalidad","value":2,"unit":null,"scale":null,"note":"Visible como +2 en la sección Efecto del entrenamiento."}],"extra_metrics":[],"visible_text":"Entrenamiento funcional · 2026/10/15 20:05:28 · 206 kcal · tiempo 01:00:11 · 277 kcal totales · FC media 99 lpm · FC máxima 140 lpm · Ligero 00:28:20 · Intensivo 00:07:53 · Aeróbico 00:00:14 · Anaeróbico 00:00:00 · VO₂ max 00:00:00 · Puntuación de Vitalidad +2 · Redmi Watch 5 Lite.","uncertainties":[],"evidence":[{"id":"img-2026-10-15-01","path":null,"sha256":"22c6ea7cf4c225a76649e52e4c1d0622e99194efb34090e34ee89de4c54c5f05","description":"Captura de resumen de Mi Fitness enviada por el usuario. La imagen no se almacena en el repositorio público."}]},"manual":{"source":"user_reported","performed_at_local":null,"activity":null,"device":null,"feeling":null,"rpe":null,"context":{"sleep_hours":null,"sleep_quality":null,"stress":null,"energy":null,"fatigue":null,"discomfort":null,"notes":null},"exercises":[],"extra_metrics":[],"original_text":null},"audit":[{"at":"2026-10-18T10:50:00-03:00","action":"create_session","reason":"Primera sesión creada desde una captura de Mi Fitness enviada por el usuario.","changes":["Fecha y hora visibles","Actividad","Duración","Calorías de actividad y totales","FC media y máxima","Tiempo por zonas","Puntuación de Vitalidad","Dispositivo visible"]}],"notes":"No se guardó la captura en el repositorio público; solo su hash SHA-256 para detectar duplicados."}]};if(!Array.isArray(db.sessions)||!Array.isArray(db.daily_activity))throw new Error('schema');$('#status').textContent='';$('#export').disabled=false;render();}catch{$('#status').textContent='No se pudo cargar el historial. Volvé a abrir el tablero para reintentar.';}
 
 </script>
 </body></html>

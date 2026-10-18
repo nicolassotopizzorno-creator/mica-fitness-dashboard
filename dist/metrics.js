@@ -93,6 +93,42 @@ export function dailyTraining(sessions){
     return row;
   }).sort((a,b)=>a.date.localeCompare(b.date));
 }
+export function evolutionSeries(sessions,dailyActivity=[]){
+  const days=dailyTraining(sessions);
+  const points=(rows,value)=>rows.map(row=>({date:row.date,value:value(row)}));
+  return {
+    time:points(days.filter(d=>d.duration_complete&&number(d.duration_seconds)),d=>d.duration_seconds),
+    sessions:points(days,d=>d.count),
+    steps:points(dailyActivity.filter(d=>d.date&&number(d.steps?.value)).sort((a,b)=>a.date.localeCompare(b.date)),d=>d.steps.value),
+    calories:points(days.filter(d=>d.calories_complete&&number(d.active_calories_kcal)),d=>d.active_calories_kcal)
+  };
+}
+export function latestDayComparison(sessions,dailyActivity=[]){
+  const days=dailyTraining(sessions);
+  if(days.length<2)return null;
+  const current=days.at(-1),previous=days.at(-2);
+  const byDate=new Map(dailyActivity.map(d=>[d.date,d]));
+  const steps=d=>byDate.get(d.date)?.steps?.value;
+  return {current:current.date,previous:previous.date,metrics:{
+    sessions:[current.count,previous.count],
+    time:current.duration_complete&&previous.duration_complete?[current.duration_seconds,previous.duration_seconds]:null,
+    steps:number(steps(current))&&number(steps(previous))?[steps(current),steps(previous)]:null,
+    calories:current.calories_complete&&previous.calories_complete?[current.active_calories_kcal,previous.active_calories_kcal]:null
+  }};
+}
+export function trainingEffectSeries(sessions){
+  const groups=new Map();
+  for(const session of sessions){
+    const date=sessionDay(session);if(!date)continue;
+    for(const effect of auto(session).training_effect||[]){
+      if(!number(effect.value))continue;
+      const key=JSON.stringify([effect.key||effect.label,effect.unit??null,effect.scale??null]);
+      if(!groups.has(key))groups.set(key,{key,label:effect.label,unit:effect.unit??null,scale:effect.scale??null,points:[]});
+      groups.get(key).points.push({date,value:effect.value,session_id:session.id,activity:activityName(session)});
+    }
+  }
+  return [...groups.values()].map(group=>({...group,points:group.points.sort((a,b)=>a.date.localeCompare(b.date)||String(a.session_id).localeCompare(String(b.session_id)))}));
+}
 export function latestComparable(sessions){
   const ordered=sessions.filter(sessionDate).sort((a,b)=>sessionDate(b).localeCompare(sessionDate(a)));
   if(ordered.length<2)return null;

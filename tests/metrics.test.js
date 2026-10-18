@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {totals,volume,setVolume,personalBests,groupedZones,sessionDate,dailyTraining,latestComparable,weeklyActivity} from '../dist/metrics.js';
+import {totals,volume,setVolume,personalBests,groupedZones,sessionDate,dailyTraining,evolutionSeries,latestDayComparison,trainingEffectSeries,latestComparable,weeklyActivity} from '../dist/metrics.js';
 const session=(automatic={},manual={})=>({automatic,manual});
 test('Missing measurements stay null and explicit zero stays zero',()=>{
   assert.equal(totals([session()]).duration.value,null);
@@ -72,4 +72,43 @@ test('Daily steps stay separate from sessions and weekly target counts only days
   assert.equal(weeks.length,1);assert.equal(weeks[0].sessions,0);
   assert.equal(weeks[0].goalsMet,1);assert.equal(weeks[0].goalsKnown,2);
   assert.deepEqual(weeks[0].steps,[9430,7000]);
+});
+test('Evolution groups same-day sessions and uses only active calories',()=>{
+  const rows=[
+    session({started_at_local:'2026-10-14T08:00',duration_seconds:1800,active_calories_kcal:100,total_calories_kcal:140}),
+    session({started_at_local:'2026-10-14T18:00',duration_seconds:3000,active_calories_kcal:150,total_calories_kcal:200}),
+    session({started_at_local:'2026-10-15T08:00',duration_seconds:2400,active_calories_kcal:90,total_calories_kcal:120})
+  ];
+  const daily=[{date:'2026-10-14',steps:{value:9430}},{date:'2026-10-15',steps:{value:8000}}];
+  const trend=evolutionSeries(rows,daily);
+  assert.deepEqual(trend.sessions,[{date:'2026-10-14',value:2},{date:'2026-10-15',value:1}]);
+  assert.deepEqual(trend.time,[{date:'2026-10-14',value:4800},{date:'2026-10-15',value:2400}]);
+  assert.deepEqual(trend.calories,[{date:'2026-10-14',value:250},{date:'2026-10-15',value:90}]);
+  assert.deepEqual(trend.steps,[{date:'2026-10-14',value:9430},{date:'2026-10-15',value:8000}]);
+  const comparison=latestDayComparison(rows,daily);
+  assert.deepEqual(comparison.metrics.sessions,[1,2]);
+  assert.deepEqual(comparison.metrics.time,[2400,4800]);
+  assert.deepEqual(comparison.metrics.steps,[8000,9430]);
+  assert.deepEqual(comparison.metrics.calories,[90,250]);
+});
+test('Evolution omits incomplete daily totals rather than graphing partial sums',()=>{
+  const a=session({started_at_local:'2026-10-14T08:00',duration_seconds:1800,active_calories_kcal:100});
+  const b=session({started_at_local:'2026-10-15T08:00',duration_seconds:null,active_calories_kcal:null,total_calories_kcal:500});
+  const c=session({started_at_local:'2026-10-15T18:00',duration_seconds:600,active_calories_kcal:40});
+  const trend=evolutionSeries([a,b,c]);
+  assert.deepEqual(trend.sessions.map(p=>p.value),[1,2]);
+  assert.deepEqual(trend.time,[{date:'2026-10-14',value:1800}]);
+  assert.deepEqual(trend.calories,[{date:'2026-10-14',value:100}]);
+  assert.equal(latestDayComparison([a,b,c]).metrics.time,null);
+  assert.equal(latestDayComparison([a,b,c]).metrics.calories,null);
+  assert.deepEqual(trend.steps,[]);
+});
+test('Training effects remain per session and different scores are not combined',()=>{
+  const a={id:'gym',...session({started_at_local:'2026-10-15T08:00',activity:'Gym',training_effect:[{key:'vitality',label:'Vitalidad',value:1}]})};
+  const b={id:'pilates',...session({started_at_local:'2026-10-15T18:00',activity:'Pilates',training_effect:[{key:'vitality',label:'Vitalidad',value:2},{key:'aerobic',label:'Aeróbico',value:3}]})};
+  const groups=trainingEffectSeries([a,b]);
+  assert.equal(groups.length,2);
+  assert.deepEqual(groups[0].points.map(p=>p.value),[1,2]);
+  assert.deepEqual(groups[0].points.map(p=>p.session_id),['gym','pilates']);
+  assert.deepEqual(groups[1].points.map(p=>p.value),[3]);
 });

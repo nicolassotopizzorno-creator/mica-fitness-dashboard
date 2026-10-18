@@ -1,4 +1,4 @@
-import {number,sum,auto,manual,sessionDate,sessionDay,activityName,exercises,sets,sessionSetCount,volume,exerciseRows,personalBests,groupedZones,dailyTraining,latestComparable,weeklyActivity} from './metrics.js';
+import {number,sum,auto,manual,sessionDate,sessionDay,activityName,exercises,sets,sessionSetCount,volume,exerciseRows,personalBests,groupedZones,dailyTraining,evolutionSeries,latestDayComparison,trainingEffectSeries,latestComparable,weeklyActivity} from './metrics.js';
 
 const $=s=>document.querySelector(s);
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -16,12 +16,12 @@ function metric(label,value,suffix='',note=''){return '<article class="metric"><
 function mainCards(days){
   const s=db.sessions,steps=[...(db.daily_activity||[])].filter(d=>number(d.steps?.value)).sort((a,b)=>b.date.localeCompare(a.date));
   let out='';
-  if(days.length)out+=metric('Días activos',days.length,'','Con entrenamientos registrados');
+  if(days.length)out+=metric('Días activos',days.length);
   if(s.length)out+=metric('Sesiones',s.length);
   const seconds=s.map(x=>auto(x).duration_seconds).filter(number);
   if(seconds.length)out+=metric('Horas entrenadas',fmt(sum(seconds)/3600,1),'h',seconds.length<s.length?'Total parcial':'');
   if(steps.length){const last=steps[0],goal=last.step_goal?.value;out+=metric('Últimos pasos',fmt(last.steps.value),'',date(last.date)+(number(goal)?' · Meta '+fmt(goal):''));}
-  return out?'<div class="metrics">'+out+'</div>':'';
+  return out?'<div class="metrics primary-metrics'+(steps.length?' has-steps':'')+'">'+out+'</div>':'';
 }
 function secondaryCards(){
   const s=db.sessions;if(!s.length)return '';
@@ -33,35 +33,68 @@ function secondaryCards(){
   const v=volume(s);if(number(v.value))out+=metric(v.complete?'Volumen registrado':'Volumen parcial',fmt(v.value),'kg·rep');
   return out?section('Otros indicadores','<div class="metrics">'+out+'</div>','compact'):'';
 }
-function barRows(days,selector,valueLabel,stacked=false){
-  const max=Math.max(...days.map(selector).filter(number),1);
-  const colors=['#966f79','#c699a3','#d7b5a8','#b5a1a9','#c1afa2'];
-  return days.map(day=>{
-    const value=selector(day);if(!number(value))return '';
-    let bar='<span class="bar-fill" style="width:'+Math.max(2,value/max*100)+'%"></span>';
-    if(stacked&&day.sessions.length){
-      const known=day.sessions.filter(s=>number(auto(s).duration_seconds));
-      bar=known.map((s,i)=>'<span class="bar-fill" style="width:'+(auto(s).duration_seconds/max*100)+'%;background:'+colors[i%colors.length]+'" title="'+escape(activityName(s)+' · '+duration(auto(s).duration_seconds))+'"></span>').join('');
-    }
-    return '<div class="bar-row"><span class="bar-date">'+escape(dayLabel(day.date))+'</span><div class="bar-track">'+bar+'</div><span class="bar-number">'+escape(valueLabel(value,day))+'</span></div>';
+const evolutionMetrics=[
+  {key:'time',label:'Tiempo activo',format:v=>duration(v)},
+  {key:'sessions',label:'Sesiones',format:v=>fmt(v)+' '+(v===1?'sesión':'sesiones')},
+  {key:'steps',label:'Pasos',format:v=>fmt(v)+' pasos'},
+  {key:'calories',label:'Calorías',format:v=>fmt(v)+' kcal'}
+];
+let selectedEvolution='time';
+function evolutionChart(points,config){
+  const W=500,H=190,L=11,R=11,T=20,B=13,plotW=W-L-R,plotH=H-T-B;
+  const times=points.map(p=>Date.parse(p.date+'T12:00:00Z'));
+  const minTime=times[0],span=times.at(-1)-minTime||1;
+  const max=Math.max(1,...points.map(p=>p.value)),ceiling=max*1.18;
+  const x=i=>points.length===1?L+plotW/2:L+(times[i]-minTime)/span*plotW;
+  const y=v=>T+plotH-v/ceiling*plotH;
+  const pointLabel=p=>date(p.date)+(p.activity?' · '+p.activity:'');
+  let svg='<svg class="evolution-chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+escape(config.label+' por fecha')+'"><title>'+escape(points.map(p=>pointLabel(p)+': '+config.format(p.value)).join('; '))+'</title>';
+  for(const ratio of [0,.5,1]){const yy=y(ceiling*ratio);svg+='<line x1="'+L+'" y1="'+yy+'" x2="'+(W-R)+'" y2="'+yy+'" stroke="#e9e1df" stroke-dasharray="3 5"/>';}
+  svg+='<polyline points="'+points.map((p,i)=>x(i)+','+y(p.value)).join(' ')+'" fill="none" stroke="#966f79" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>';
+  points.forEach((p,i)=>{svg+='<circle cx="'+x(i)+'" cy="'+y(p.value)+'" r="5" fill="#966f79" stroke="#fffdfa" stroke-width="2"><title>'+escape(pointLabel(p)+': '+config.format(p.value))+'</title></circle>';});
+  svg+='</svg>';
+  svg+='<div class="evolution-axis"><span>'+escape(dayLabel(points[0].date))+'</span><span>Fecha</span><span>'+escape(dayLabel(points.at(-1).date))+'</span></div>';
+  const last=points.at(-1);
+  const values='<div class="evolution-latest"><span>Último dato · '+escape(date(last.date))+'</span><strong>'+escape(config.format(last.value))+'</strong></div>';
+  const table='<details class="evolution-table"><summary>Ver valores por fecha</summary><div class="scroll"><table><thead><tr><th>Fecha</th><th>'+escape(config.label)+'</th></tr></thead><tbody>'+points.map(p=>'<tr><td>'+escape(pointLabel(p))+'</td><td>'+escape(config.format(p.value))+'</td></tr>').join('')+'</tbody></table></div></details>';
+  return svg+values+table;
+}
+function dayComparisonCompact(){
+  const pair=latestDayComparison(db.sessions,db.daily_activity||[]);if(!pair)return '';
+  const configurations=[
+    {key:'sessions',label:'Sesiones',format:v=>fmt(v)+' '+(v===1?'sesión':'sesiones'),delta:v=>fmt(v)+' '+(Math.abs(v)===1?'sesión':'sesiones')},
+    {key:'time',label:'Tiempo activo',format:duration,delta:duration},
+    {key:'steps',label:'Pasos',format:v=>fmt(v)+' pasos',delta:v=>fmt(v)+' pasos'},
+    {key:'calories',label:'Calorías de actividad',format:v=>fmt(v)+' kcal',delta:v=>fmt(v)+' kcal'}
+  ];
+  const cards=configurations.filter(c=>pair.metrics[c.key]).map(c=>{
+    const [current,previous]=pair.metrics[c.key],difference=current-previous;
+    const change=difference===0?'0 '+(c.key==='time'?'min':c.key==='sessions'?'sesiones':c.key==='steps'?'pasos':'kcal'):(difference>0?'+':'−')+c.delta(Math.abs(difference));
+    return '<div class="day-compare-card"><small>'+escape(c.label)+'</small><strong>'+escape(c.format(current))+'</strong><span>'+escape(change)+' vs '+escape(dayLabel(pair.previous))+'</span></div>';
   }).join('');
+  return '<div class="day-compare"><div class="day-compare-heading"><h3>Último día vs anterior</h3><span>'+escape(dayLabel(pair.current))+' · '+escape(dayLabel(pair.previous))+'</span></div><div class="day-compare-grid">'+cards+'</div></div>';
 }
-function dailyCharts(days){
-  if(!days.length)return '';
-  let html=section('Actividad por día',barRows(days,d=>d.count,v=>v+' '+(v===1?'sesión':'sesiones')));
-  if(days.some(d=>number(d.duration_seconds)))html+=section('Horas de actividad por día',barRows(days,d=>d.duration_seconds,(v,d)=>duration(v)+(d.duration_complete?'':'*'),true)+(days.some(d=>number(d.duration_seconds)&&!d.duration_complete)?'<p class="partial-note">* Tiempo parcial: alguna sesión no tiene duración registrada.</p>':''));
-  return '<div class="daily-charts">'+html+'</div>';
-}
-function stepsChart(){
-  const rows=(db.daily_activity||[]).filter(d=>number(d.steps?.value)).sort((a,b)=>a.date.localeCompare(b.date));
-  if(rows.length<2)return '';
-  const max=Math.max(1,...rows.map(d=>Math.max(d.steps.value,d.step_goal?.value||0)));
-  let html='';
-  for(const d of rows){
-    const goal=d.step_goal?.value;
-    html+='<div class="step-row"><span class="bar-date">'+escape(dayLabel(d.date))+'</span><div class="step-track"><span class="bar-fill" style="width:'+Math.max(2,d.steps.value/max*100)+'%"></span>'+(number(goal)?'<span class="goal-mark" style="left:'+Math.min(99,goal/max*100)+'%" title="Meta '+escape(fmt(goal))+'"></span>':'')+'</div><small>'+escape(fmt(d.steps.value))+(number(goal)?' / '+escape(fmt(goal)):'')+'</small></div>';
+function evolutionPanel(){
+  const series=evolutionSeries(db.sessions,db.daily_activity||[]);
+  const available=evolutionMetrics.filter(c=>series[c.key].length>=2);
+  const comparison=dayComparisonCompact();
+  if(!available.length&&!comparison)return '';
+  let body='';
+  if(available.length){
+    const active=available.find(c=>c.key===selectedEvolution)||available[0];
+    selectedEvolution=active.key;
+    body+='<div class="metric-switch" role="group" aria-label="Métrica de evolución">'+available.map(c=>'<button type="button" data-evolution="'+c.key+'" aria-pressed="'+(c.key===active.key)+'">'+escape(c.label)+'</button>').join('')+'</div><div id="evolutionPlot">'+evolutionChart(series[active.key],active)+'</div>';
   }
-  return section('Pasos diarios',html);
+  return section('Evolución',body+comparison,'evolution');
+}
+function bindEvolution(){
+  const series=evolutionSeries(db.sessions,db.daily_activity||[]);
+  document.querySelectorAll('[data-evolution]').forEach(button=>button.onclick=()=>{
+    selectedEvolution=button.dataset.evolution;
+    document.querySelectorAll('[data-evolution]').forEach(other=>other.setAttribute('aria-pressed',String(other===button)));
+    const config=evolutionMetrics.find(c=>c.key===selectedEvolution);
+    $('#evolutionPlot').innerHTML=evolutionChart(series[selectedEvolution],config);
+  });
 }
 function sessionList(days){
   if(!days.length)return '';
@@ -73,7 +106,7 @@ function sessionList(days){
     }
     html+='</div>';
   }
-  return section('Mis entrenamientos',html);
+  return '<details class="section workout-disclosure"><summary><span>Últimos entrenamientos</span><small>'+db.sessions.length+' '+(db.sessions.length===1?'sesión':'sesiones')+'</small><span class="disclosure-arrow" aria-hidden="true">⌄</span></summary><div class="workout-list">'+html+'</div></details>';
 }
 function compareRows(headA,headB,rows){
   const valid=rows.filter(r=>r[1]!=null&&r[2]!=null);
@@ -107,13 +140,6 @@ function activityComparison(){
   const body=compareRows(dayLabel(sessionDay(a)),dayLabel(sessionDay(b)),rows);
   return body?section('Última actividad vs anterior · '+activityName(a),body):'';
 }
-function dayComparison(days){
-  if(days.length<2)return '';
-  const a=days.at(-1),b=days.at(-2);
-  const byDate=new Map((db.daily_activity||[]).map(d=>[d.date,d]));
-  const rows=[['Actividades',a.count,b.count],['Tiempo total',a.duration_complete?duration(a.duration_seconds):null,b.duration_complete?duration(b.duration_seconds):null],['Calorías de actividad',a.calories_complete?unit(a.active_calories_kcal,'kcal'):null,b.calories_complete?unit(b.active_calories_kcal,'kcal'):null],['FC máxima',unit(a.max_bpm,'lpm'),unit(b.max_bpm,'lpm')],['FC media ponderada',unit(a.average_bpm,'lpm'),unit(b.average_bpm,'lpm')],['Pasos',byDate.get(a.date)?.steps?.value,byDate.get(b.date)?.steps?.value]];
-  return section('Último día activo vs anterior',compareRows(dayLabel(a.date),dayLabel(b.date),rows));
-}
 function weeklyPanel(days){
   const allDays=new Set([...days.map(d=>d.date),...(db.daily_activity||[]).filter(d=>number(d.steps?.value)).map(d=>d.date)]);
   const weeks=weeklyActivity(db.sessions,db.daily_activity||[]);
@@ -136,7 +162,25 @@ function zonesPanel(sessions,individual=false){
 function effectsPanel(sessions,individual=false){
   const entries=sessions.flatMap(s=>(auto(s).training_effect||[]).filter(e=>e.value!=null).map(e=>({date:sessionDay(s),name:e.label,value:e.value,unit:e.unit,scale:e.scale})));
   if(!entries.length)return '';
-  return section('Efecto del entrenamiento',entries.map(e=>'<div class="effect-row"><span><strong>'+escape(e.name)+'</strong>'+(!individual?'<small>'+escape(date(e.date))+'</small>':'')+'</span><span class="effect-value">'+escape(e.value)+(e.unit?' '+escape(e.unit):'')+(e.scale?'<small> / '+escape(e.scale)+'</small>':'')+'</span></div>').join(''));
+  if(individual)return section('Efecto del entrenamiento',entries.map(e=>'<div class="effect-row"><span><strong>'+escape(e.name)+'</strong></span><span class="effect-value">'+escape(e.value)+(e.unit?' '+escape(e.unit):'')+(e.scale?'<small> / '+escape(e.scale)+'</small>':'')+'</span></div>').join(''));
+  const groups=trainingEffectSeries(sessions);if(!groups.length)return '';
+  const active=groups.find(g=>g.key===selectedEffect)||groups[0];selectedEffect=active.key;
+  const buttons=groups.length>1?'<div class="metric-switch effect-switch" role="group" aria-label="Tipo de efecto">'+groups.map(g=>'<button type="button" data-effect="'+escape(g.key)+'" aria-pressed="'+(g.key===active.key)+'">'+escape(g.label)+'</button>').join('')+'</div>':'';
+  return section('Efecto del entrenamiento',buttons+'<div id="effectPlot">'+effectChart(active)+'</div>');
+}
+let selectedEffect=null;
+function effectChart(group){
+  const config={label:group.label,format:v=>fmt(v,1)+(group.unit?' '+group.unit:'')};
+  return '<div class="effect-caption">'+escape(group.label)+(group.scale?' · '+escape(group.scale):'')+'</div>'+evolutionChart(group.points,config);
+}
+function bindEffect(){
+  const groups=trainingEffectSeries(db.sessions);
+  document.querySelectorAll('[data-effect]').forEach(button=>button.onclick=()=>{
+    selectedEffect=button.dataset.effect;
+    document.querySelectorAll('[data-effect]').forEach(other=>other.setAttribute('aria-pressed',String(other===button)));
+    const group=groups.find(g=>g.key===selectedEffect);
+    if(group)$('#effectPlot').innerHTML=effectChart(group);
+  });
 }
 function chart(title,points,unitName){
   const p=points.filter(x=>x.date&&number(x.value)).sort((a,b)=>a.date.localeCompare(b.date));
@@ -178,7 +222,6 @@ function renderExercise(){
 function extraTrends(days){
   if(days.length<2)return '';
   let out='';
-  out+=chart('Calorías de actividad por día',days.filter(d=>d.calories_complete).map(d=>({date:d.date,value:d.active_calories_kcal})),'kcal');
   out+=chart('FC máxima por día',days.map(d=>({date:d.date,value:d.max_bpm})),'lpm');
   out+=chart('FC media diaria ponderada',days.map(d=>({date:d.date,value:d.average_bpm})),'lpm');
   const rpe=db.sessions.map(s=>({date:sessionDate(s),value:manual(s).rpe}));
@@ -216,8 +259,10 @@ function render(){
   if(!db)return;
   const days=dailyTraining(db.sessions);
   if(!db.sessions.length&&!(db.daily_activity||[]).length){$('#content').innerHTML='<section class="section empty"><h2>Tu historia empieza acá</h2><p>Mandá tu primera captura o los pasos del día en este chat.</p></section>';return;}
-  let html=mainCards(days)+dailyCharts(days)+stepsChart()+activityComparison()+dayComparison(days)+sessionList(days)+weeklyPanel(days)+zonesPanel(db.sessions)+effectsPanel(db.sessions)+secondaryCards()+exercisePanel()+extraTrends(days);
+  let html=mainCards(days)+evolutionPanel()+sessionList(days)+activityComparison()+weeklyPanel(days)+zonesPanel(db.sessions)+effectsPanel(db.sessions)+secondaryCards()+exercisePanel()+extraTrends(days);
   $('#content').innerHTML=html;
+  bindEvolution();
+  bindEffect();
   document.querySelectorAll('[data-session]').forEach(b=>b.onclick=()=>showSession(db.sessions.find(s=>s.id===b.dataset.session)));
   if($('#exerciseSelect')){$('#exerciseSelect').onchange=renderExercise;renderExercise();}
 }

@@ -76,7 +76,7 @@
         "extra_metrics": {"type": "array", "items": {"$ref": "#/$defs/metric"}},
         "visible_text": {"$ref": "#/$defs/text"},
         "uncertainties": {"type": "array", "items": {"type": "string"}},
-        "evidence": {"type": "array", "items": {"type": "object", "required": ["id", "sha256"], "properties": {"id": {"type": "string"}, "path": {"$ref": "#/$defs/text"}, "sha256": {"type": "string"}, "description": {"$ref": "#/$defs/text"}}}}
+        "evidence": {"type": "array", "items": {"type": "object", "required": ["id", "sha256"], "properties": {"id": {"type": "string"}, "path": {"$ref": "#/$defs/text"}, "sha256": {"type": ["string", "null"]}, "description": {"$ref": "#/$defs/text"}}}}
       }},
       "manual": {"type": "object", "required": ["source", "exercises"], "properties": {
         "source": {"const": "user_reported"},
