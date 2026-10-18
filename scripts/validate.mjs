@@ -17,14 +17,21 @@ function validate(v,s,p='$') {
 }
 validate(db,schema);
 const ids=new Set(),catalog=new Set();
+const validDay=day=>{const parsed=new Date(day+'T12:00:00Z');return Number.isFinite(parsed.getTime())&&parsed.toISOString().slice(0,10)===day;};
 for(const e of db.exercise_catalog){if(catalog.has(e.id))throw new Error('Duplicate catalog ID');catalog.add(e.id);}
 for(const s of db.sessions){
   if(ids.has(s.id))throw new Error('Duplicate session ID');ids.add(s.id);
   for(const d of [s.automatic.started_at_local,s.manual.performed_at_local].filter(Boolean)){
-    const day=d.slice(0,10);const parsed=new Date(day+'T12:00:00Z');
-    if(!Number.isFinite(parsed.getTime())||parsed.toISOString().slice(0,10)!==day)throw new Error('Invalid calendar date');
+    const day=d.slice(0,10);
+    if(!validDay(day))throw new Error('Invalid calendar date');
     if(d.length>10&&(Number(d.slice(11,13))>23||Number(d.slice(14,16))>59||Number(d.slice(17,19)||0)>59))throw new Error('Invalid time');
   }
   const eids=new Set();for(const e of s.manual.exercises){if(eids.has(e.id))throw new Error('Duplicate exercise ID in session');eids.add(e.id);if(e.catalog_id&&!catalog.has(e.catalog_id))throw new Error('Unknown catalog reference');}
 }
-console.log(`Valid history: ${db.sessions.length} sessions, ${catalog.size} catalog entries. Schema subset, dates and references checked.`);
+const days=new Set();
+for(const item of db.daily_activity){
+  if(!validDay(item.date))throw new Error('Invalid daily activity date');
+  if(days.has(item.date))throw new Error('Duplicate daily activity date');
+  days.add(item.date);
+}
+console.log(`Valid history: ${db.sessions.length} sessions, ${db.daily_activity.length} daily records, ${catalog.size} catalog entries.`);

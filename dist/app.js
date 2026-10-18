@@ -1,86 +1,228 @@
-import {number,sum,totals,auto,manual,sessionDate,activityName,exercises,sets,setCount,sessionSetCount,volume,exerciseRows,personalBests,groupedZones} from './metrics.js';
+import {number,sum,auto,manual,sessionDate,sessionDay,activityName,exercises,sets,sessionSetCount,volume,exerciseRows,personalBests,groupedZones,dailyTraining,latestComparable,weeklyActivity} from './metrics.js';
+
 const $=s=>document.querySelector(s);
 const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=(n,d=0)=>new Intl.NumberFormat('es-AR',{maximumFractionDigits:d}).format(n);
-const duration=n=>number(n)?`${Math.floor(n/3600)?Math.floor(n/3600)+' h ':''}${Math.floor((n%3600)/60)} min${n%60?' '+fmt(n%60)+' s':''}`:null;
-const date=s=>{if(!s)return 'Fecha no informada';const [y,m,d]=s.slice(0,10).split('-');return `${d}/${m}/${y}${s.length>10?' · '+s.slice(11,16):''}`;};
-const basis={total_external:'carga externa total',per_hand:'por mano',machine:'carga indicada en máquina',bodyweight:'peso corporal',unknown:'base sin informar'};
-const valueText=(v,unit='')=>number(v)?fmt(v,1)+(unit?' '+unit:''):null;
-let db,view='overview';
-const sourceTag=(text,type='auto')=>`<span class="pill ${type==='manual'?'manual':''}">${type==='manual'?'✎':'◉'} ${escape(text)}</span>`;
-function section(title,body,subtitle=''){return `<section class="section"><h2>${escape(title)}</h2>${subtitle?`<p class="subtle">${escape(subtitle)}</p>`:''}${body}</section>`;}
-function table(headers,rows){return `<div class="scroll"><table><thead><tr>${headers.map(h=>`<th scope="col">${escape(h)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${escape(c??'—')}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;}
-function empty(){return `<section class="empty"><div class="empty-art" aria-hidden="true"><div class="orbit"></div><div class="log-card"><div class="sun">✳</div><div class="line"></div><div class="line short"></div><div class="line"></div></div><div class="check">↗</div></div><div class="empty-copy"><p class="eyebrow">TU PUNTO DE PARTIDA</p><h2>Tu historia empieza con el próximo registro.</h2><p>Mandá tu primera captura de Mi Fitness en este chat. Cada entrenamiento sumará una nueva página a tu progreso.</p><div class="pill-row">${sourceTag('Mi Fitness')}${sourceTag('Tus anotaciones','manual')}</div><p class="footnote">Los indicadores aparecen cuando hay datos reales.<br>Todo empieza con lo que vos compartís.</p></div></section>`;}
-function metric(label,value,unit,note){return `<article class="metric"><div class="label">${escape(label)}</div><div class="value">${escape(value)}${unit?` <span style="font-size:13px;font-weight:500">${escape(unit)}</span>`:''}</div><small>${escape(note)}</small></article>`;}
-function cards(s){const t=totals(s),coverage=n=>`${n} de ${s.length} sesiones · Mi Fitness`;let html=metric('Sesiones registradas',t.sessions,'','En el período seleccionado');
-if(number(t.duration.value))html+=metric('Tiempo entrenado',fmt(t.duration.value/3600,1),'h',coverage(t.duration.count));
-if(number(t.activeCalories.value))html+=metric('Calorías de actividad',fmt(t.activeCalories.value),'kcal',coverage(t.activeCalories.count));
-if(number(t.totalCalories.value))html+=metric('Calorías totales',fmt(t.totalCalories.value),'kcal',coverage(t.totalCalories.count)+' · No se suman a las de actividad');
-if(number(t.averageHR.value))html+=metric('FC media de sesiones',fmt(t.averageHR.value,1),'lpm',coverage(t.averageHR.count)+' · Promedio sin ponderar');
-if(number(t.maxHR.value))html+=metric('FC máxima registrada',fmt(t.maxHR.value),'lpm',coverage(t.maxHR.count));
-if(number(t.rpe.value))html+=metric('Esfuerzo percibido medio',fmt(t.rpe.value,1),'/ 10',`${t.rpe.count} sesiones · Manual`);
-if(t.exercises)html+=metric('Ejercicios registrados',t.exercises,'','Anotaciones manuales');
-if(number(t.sets.value))html+=metric('Series informadas',t.sets.value,'','Manual · Solo cantidades conocidas');
-if(number(t.volume.value))html+=metric(t.volume.complete?'Volumen registrado':'Volumen parcial',fmt(t.volume.value),'kg·rep','Calculado de datos manuales · Carga externa total');
-return `<div class="metrics">${html}</div>`;}
-function chart(title,points,unit,subtitle=''){
-  const p=points.filter(p=>number(p.value)&&p.date).sort((a,b)=>a.date.localeCompare(b.date));
-  if(p.length<2)return '';
-  const max=Math.max(...p.map(p=>p.value),1),min=Math.min(...p.map(p=>p.value),0),w=680,h=130;
-  const timestamps=p.map(p=>Date.parse(p.date.slice(0,10)+'T12:00:00Z'));
-  const first=Math.min(...timestamps),last=Math.max(...timestamps);
-  const pos=p.map((v,i)=>[last===first?40+i/(p.length-1)*(w-80):40+(timestamps[i]-first)/(last-first)*(w-80),145-(v.value-min)/(max-min)*h]);
-  const path=pos.map(v=>v.join(',')).join(' ');
-  return section(title,`<div class="chart-wrap"><svg class="chart" viewBox="0 0 680 180" role="img" aria-label="${escape(title)}. Valores exactos en la tabla desplegable."><line x1="40" y1="145" x2="640" y2="145" stroke="#dce2d5"/><polyline fill="none" stroke="#527c45" stroke-width="2.5" stroke-dasharray="5 4" points="${path}"/>${pos.map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="4" fill="#527c45"><title>${escape(date(p[i].date))}: ${escape(fmt(p[i].value,1))} ${escape(unit)}</title></circle>`).join('')}<text x="0" y="15">${escape(fmt(max,1))}</text><text x="0" y="148">${escape(fmt(min,1))}</text></svg><div class="chart-labels"><span>${escape(date(p[0].date).split(' · ')[0])}</span><span>${escape(unit)}</span><span>${escape(date(p.at(-1).date).split(' · ')[0])}</span></div></div><details><summary>Ver valores y contexto</summary>${table(['Fecha','Actividad',unit||'Valor'],p.map(v=>[date(v.date),v.activity||'',fmt(v.value,1)]))}</details>`,subtitle);
+const duration=n=>number(n)?(Math.floor(n/3600)?Math.floor(n/3600)+' h ':'')+Math.floor((n%3600)/60)+' min'+(n%60?' '+fmt(n%60)+' s':''):null;
+const dayLabel=s=>s?s.slice(8,10)+'/'+s.slice(5,7):'—';
+const date=s=>s?dayLabel(s)+'/'+s.slice(0,4)+(s.length>10?' · '+s.slice(11,16):''):'Fecha no informada';
+const unit=(n,u)=>number(n)?fmt(n,1)+' '+u:null;
+const basis={total_external:'carga externa total',per_hand:'por mano',machine:'máquina',bodyweight:'peso corporal',unknown:'base no informada'};
+const sourceName=s=>s==='mi_fitness_screenshot'?'Mi Fitness':'Informado por Mica';
+let db;
+
+function section(title,body,extraClass=''){return '<section class="section '+extraClass+'"><h2>'+escape(title)+'</h2>'+body+'</section>';}
+function metric(label,value,suffix='',note=''){return '<article class="metric"><div class="label">'+escape(label)+'</div><div class="value">'+escape(value)+(suffix?' <small>'+escape(suffix)+'</small>':'')+'</div>'+(note?'<div class="note">'+escape(note)+'</div>':'')+'</article>';}
+function mainCards(days){
+  const s=db.sessions,steps=[...(db.daily_activity||[])].filter(d=>number(d.steps?.value)).sort((a,b)=>b.date.localeCompare(a.date));
+  let out='';
+  if(days.length)out+=metric('Días activos',days.length,'','Con entrenamientos registrados');
+  if(s.length)out+=metric('Sesiones',s.length);
+  const seconds=s.map(x=>auto(x).duration_seconds).filter(number);
+  if(seconds.length)out+=metric('Horas entrenadas',fmt(sum(seconds)/3600,1),'h',seconds.length<s.length?'Total parcial':'');
+  if(steps.length){const last=steps[0],goal=last.step_goal?.value;out+=metric('Últimos pasos',fmt(last.steps.value),'',date(last.date)+(number(goal)?' · Meta '+fmt(goal):''));}
+  return out?'<div class="metrics">'+out+'</div>':'';
 }
-function sessionList(s,title='Tus entrenamientos'){return section(title,s.map(v=>`<button class="session" data-session="${escape(v.id)}"><span><strong>${escape(activityName(v))}</strong><small>${escape(date(sessionDate(v)))}</small></span><span>${escape(duration(auto(v).duration_seconds)||'Ver registro')} <span aria-hidden="true">↗</span></span></button>`).join(''));}
-function zonesPanel(s){const zones=groupedZones(s);if(!zones.length)return '';const total=sum(zones.map(z=>z.seconds));return section('Tiempo por zonas',zones.map(z=>`<div class="zone"><div class="zone-title"><span>${escape(z.name)}${number(z.lower_bpm)||number(z.upper_bpm)?' · '+escape(z.lower_bpm??'?')+'–'+escape(z.upper_bpm??'?')+' lpm':''}</span><strong>${escape(duration(z.seconds))}</strong></div><div class="zone-bar"><span style="width:${total?z.seconds/total*100:0}%"></span></div></div>`).join(''),'Mi Fitness · Se conservan los nombres y límites visibles. Zonas con distintos límites se muestran por separado.');}
-const trends=[
-  ['Duración por sesión','min',s=>number(auto(s).duration_seconds)?auto(s).duration_seconds/60:null,'Mi Fitness'],
-  ['Calorías de actividad por sesión','kcal',s=>auto(s).active_calories_kcal,'Mi Fitness · Dependen también de la duración y del tipo de actividad.'],
-  ['Calorías totales por sesión','kcal',s=>auto(s).total_calories_kcal,'Mi Fitness · Incluyen las calorías de actividad cuando así lo informa la aplicación.'],
-  ['FC media por sesión','lpm',s=>auto(s).heart_rate?.average_bpm,'Mi Fitness · Una FC menor no implica por sí sola una mejora.'],
-  ['FC máxima por sesión','lpm',s=>auto(s).heart_rate?.max_bpm,'Mi Fitness'],
-  ['Tu esfuerzo percibido','RPE / 10',s=>manual(s).rpe,'Manual · Interpretar junto con actividad, duración, descanso y sensaciones.'],
-  ['Ejercicios por sesión','ejercicios',s=>exercises(s).length||null,'Manual · Solo ejercicios informados.'],
-  ['Series por sesión','series',sessionSetCount,'Manual · Solo cantidades informadas.'],
-  ['Volumen por sesión','kg·rep',s=>volume([s]).value,'Calculado de datos manuales · Puede ser parcial. Solo carga externa total con series y repeticiones conocidas.']
-];
-function consistency(s){const dated=s.filter(v=>sessionDate(v));if(dated.length<2)return '';const buckets=new Map();for(const row of dated){const d=new Date(sessionDate(row).slice(0,10)+'T12:00:00Z');d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7));const k=d.toISOString().slice(0,10);buckets.set(k,(buckets.get(k)||0)+1);}const keys=[...buckets.keys()].sort();return section('Tu constancia',table(['Semana del lunes','Sesiones registradas'],keys.map(k=>[date(k),buckets.get(k)])),'Solo refleja lo registrado. Una semana sin registros no permite concluir que no entrenaste.');}
-function trainingEffects(s){const rows=s.flatMap(v=>(auto(v).training_effect||[]).filter(e=>e.value!==null&&e.value!==undefined).map(e=>[date(sessionDate(v)),activityName(v),e.label,String(e.value)+(e.unit?' '+e.unit:''),e.scale||'—']));return rows.length?section('Efecto del entrenamiento',table(['Fecha','Actividad','Métrica','Valor','Escala'],rows),'Mi Fitness · Se conserva cada etiqueta y escala; puntuaciones distintas no implican automáticamente una mejora.') : '';}
-function muscleDistribution(s){const groups=new Map();for(const v of s)for(const e of exercises(v))for(const g of e.muscle_groups||[])groups.set(g,(groups.get(g)||0)+1);if(!groups.size)return '';return section('Grupos musculares registrados',`<div class="group-list">${[...groups].map(([g,n])=>`<span>${escape(g)} <strong>${n}</strong></span>`).join('')}</div>`,'Manual · Cantidad de ejercicios con cada grupo informado. Un ejercicio puede contar en varios grupos.');}
-function exercisePanel(s){const choices=new Map();for(const v of s)for(const e of exercises(v))choices.set(e.catalog_id||e.id,e.name||e.name_original);if(!choices.size)return '';return section('Tu recorrido por ejercicio',`<label>Ejercicio<select class="exercise-selector" id="exerciseSelect">${[...choices].map(([id,name])=>`<option value="${escape(id)}">${escape(name)}</option>`).join('')}</select></label><div id="exerciseContent"></div>`,'Se comparan variantes equivalentes y la misma forma de expresar la carga. Se conserva tu nombre original.');}
-function renderExercise(s){const id=$('#exerciseSelect')?.value;if(!id)return;const rows=exerciseRows(s,id);const records=personalBests(rows);let html='';if(records.length)html+=`<h3>Mayor carga registrada</h3>`+table(['Carga','Forma de carga','Repeticiones','Fecha'],records.map(r=>[fmt(r.set.load_kg,1)+' kg',basis[r.set.load_basis]||r.set.load_basis,r.set.reps,date(r.date)]))+`<p class="subtle">Mejor carga anotada para esta variante. No es una estimación de 1RM ni prueba de mejora de rendimiento.</p>`;
-const bases=[...new Set(rows.filter(r=>number(r.set.load_kg)&&r.set.load_basis&&r.set.load_basis!=='unknown').map(r=>r.set.load_basis))];for(const b of bases){const bySession=new Map();for(const r of rows.filter(r=>r.set.load_basis===b&&number(r.set.load_kg))){const old=bySession.get(r.session.id);if(!old||r.set.load_kg>old.set.load_kg)bySession.set(r.session.id,r);}html+=chart('Carga máxima por sesión · '+(basis[b]||b),[...bySession.values()].map(r=>({date:r.date,value:r.set.load_kg,activity:r.exercise.name_original})),'kg','Manual · Comparación dentro de la misma variante y forma de carga.');}
-if(rows.length)html+=table(['Fecha','Nombre original','Series','Reps','Carga (kg)','Base','Tiempo','Descanso'],rows.map(r=>[date(r.date),r.exercise.name_original,r.set.set_count,r.set.reps,r.set.load_kg,r.set.load_basis?basis[r.set.load_basis]||r.set.load_basis:null,duration(r.set.duration_seconds),duration(r.set.rest_seconds)]));
-if(!rows.length)html='<p class="subtle">Ejercicio anotado sin detalle de series o carga.</p>';
-$('#exerciseContent').innerHTML=html;}
-function comparePanel(s){if(s.length<2)return '';const options=s.map(v=>`<option value="${escape(v.id)}">${escape(date(sessionDate(v))+' · '+activityName(v))}</option>`).join('');return section('Comparar sesiones',`<div class="comparison-controls"><label>Primera sesión<select id="compareA">${options}</select></label><label>Segunda sesión<select id="compareB">${options}</select></label></div><div id="comparison"></div>`,'La comparación describe diferencias. Para valorar cambios, considerá actividad, duración, esfuerzo, sueño y cansancio.');}
-function compare(s){const a=s.find(v=>v.id===$('#compareA').value),b=s.find(v=>v.id===$('#compareB').value);if(a.id===b.id){$('#comparison').innerHTML='<p class="subtle">Elegí dos sesiones distintas.</p>';return;}const spec=[['Actividad',activityName],['Duración · Mi Fitness',v=>duration(auto(v).duration_seconds)],['Calorías de actividad · Mi Fitness',v=>valueText(auto(v).active_calories_kcal,'kcal')],['Calorías totales · Mi Fitness',v=>valueText(auto(v).total_calories_kcal,'kcal')],['FC media · Mi Fitness',v=>valueText(auto(v).heart_rate?.average_bpm,'lpm')],['FC máxima · Mi Fitness',v=>valueText(auto(v).heart_rate?.max_bpm,'lpm')],['RPE · Manual',v=>valueText(manual(v).rpe,'/ 10')],['Sensación · Manual',v=>manual(v).feeling],['Sueño · Manual',v=>valueText(manual(v).context?.sleep_hours,'h')],['Estrés · Manual',v=>manual(v).context?.stress],['Energía · Manual',v=>manual(v).context?.energy],['Cansancio · Manual',v=>manual(v).context?.fatigue],['Molestias · Manual',v=>manual(v).context?.discomfort],['Contexto · Manual',v=>manual(v).context?.notes]];$('#comparison').innerHTML=table(['Dato',date(sessionDate(a)),date(sessionDate(b))],spec.map(([label,fn])=>[label,fn(a),fn(b)]).filter(r=>r[1]!=null||r[2]!=null));}
-function filtered(){return db.sessions.filter(s=>{const d=sessionDate(s)?.slice(0,10);return (!$('#fromDate').value||(d&&d>=$('#fromDate').value))&&(!$('#toDate').value||(d&&d<=$('#toDate').value))&&(!$('#activity').value||activityName(s)===$('#activity').value);}).sort((a,b)=>(sessionDate(b)||'').localeCompare(sessionDate(a)||''));}
-function render(){if(!db)return;$('#overviewTab').classList.toggle('active',view==='overview');$('#historyTab').classList.toggle('active',view==='history');$('#overviewTab').setAttribute('aria-pressed',view==='overview');$('#historyTab').setAttribute('aria-pressed',view==='history');$('#filters').hidden=!db.sessions.length;
-if(!db.sessions.length){$('#content').innerHTML=empty();return;}const s=filtered();if(!s.length){$('#content').innerHTML='<p class="note" style="margin-top:25px">No hay sesiones que coincidan con estos filtros.</p>';return;}
-let html=cards(s);if(view==='history')html+=sessionList(s);else{html+=sessionList(s.slice(0,3),'Últimos entrenamientos');html+=consistency(s);html+=zonesPanel(s);for(const [title,unit,fn,subtitle]of trends)html+=chart(title,s.map(v=>({date:sessionDate(v),value:fn(v),activity:activityName(v)})),unit,subtitle);html+=trainingEffects(s)+exercisePanel(s)+muscleDistribution(s)+comparePanel(s);}
-$('#content').innerHTML=html;document.querySelectorAll('[data-session]').forEach(b=>b.onclick=()=>showSession(db.sessions.find(s=>s.id===b.dataset.session)));if($('#exerciseSelect')){$('#exerciseSelect').onchange=()=>renderExercise(s);renderExercise(s);}if($('#compareA')){$('#compareB').selectedIndex=1;$('#compareA').onchange=$('#compareB').onchange=()=>compare(s);compare(s);}}
-function detailGrid(pairs){return `<div class="detail-grid">${pairs.filter(([,v])=>v!==null&&v!==undefined&&v!=='').map(([k,v])=>`<div><small>${escape(k)}</small><strong>${escape(v)}</strong></div>`).join('')}</div>`;}
+function secondaryCards(){
+  const s=db.sessions;if(!s.length)return '';
+  const vals=fn=>s.map(fn).filter(number);
+  let out='';
+  const kcal=vals(x=>auto(x).active_calories_kcal);if(kcal.length)out+=metric('Calorías de actividad',fmt(sum(kcal)),'kcal',kcal.length<s.length?'Total parcial':kcal.length+' sesiones');
+  const peaks=vals(x=>auto(x).heart_rate?.max_bpm);if(peaks.length)out+=metric('FC máxima registrada',fmt(Math.max(...peaks)),'lpm');
+  const rpe=vals(x=>manual(x).rpe);if(rpe.length)out+=metric('Esfuerzo percibido',fmt(sum(rpe)/rpe.length,1),'/ 10',rpe.length+' sesiones');
+  const v=volume(s);if(number(v.value))out+=metric(v.complete?'Volumen registrado':'Volumen parcial',fmt(v.value),'kg·rep');
+  return out?section('Otros indicadores','<div class="metrics">'+out+'</div>','compact'):'';
+}
+function barRows(days,selector,valueLabel,stacked=false){
+  const max=Math.max(...days.map(selector).filter(number),1);
+  const colors=['#966f79','#c699a3','#d7b5a8','#b5a1a9','#c1afa2'];
+  return days.map(day=>{
+    const value=selector(day);if(!number(value))return '';
+    let bar='<span class="bar-fill" style="width:'+Math.max(2,value/max*100)+'%"></span>';
+    if(stacked&&day.sessions.length){
+      const known=day.sessions.filter(s=>number(auto(s).duration_seconds));
+      bar=known.map((s,i)=>'<span class="bar-fill" style="width:'+(auto(s).duration_seconds/max*100)+'%;background:'+colors[i%colors.length]+'" title="'+escape(activityName(s)+' · '+duration(auto(s).duration_seconds))+'"></span>').join('');
+    }
+    return '<div class="bar-row"><span class="bar-date">'+escape(dayLabel(day.date))+'</span><div class="bar-track">'+bar+'</div><span class="bar-number">'+escape(valueLabel(value,day))+'</span></div>';
+  }).join('');
+}
+function dailyCharts(days){
+  if(!days.length)return '';
+  let html=section('Actividad por día',barRows(days,d=>d.count,v=>v+' '+(v===1?'sesión':'sesiones')));
+  if(days.some(d=>number(d.duration_seconds)))html+=section('Horas de actividad por día',barRows(days,d=>d.duration_seconds,(v,d)=>duration(v)+(d.duration_complete?'':'*'),true)+(days.some(d=>number(d.duration_seconds)&&!d.duration_complete)?'<p class="partial-note">* Tiempo parcial: alguna sesión no tiene duración registrada.</p>':''));
+  return '<div class="daily-charts">'+html+'</div>';
+}
+function stepsChart(){
+  const rows=(db.daily_activity||[]).filter(d=>number(d.steps?.value)).sort((a,b)=>a.date.localeCompare(b.date));
+  if(rows.length<2)return '';
+  const max=Math.max(1,...rows.map(d=>Math.max(d.steps.value,d.step_goal?.value||0)));
+  let html='';
+  for(const d of rows){
+    const goal=d.step_goal?.value;
+    html+='<div class="step-row"><span class="bar-date">'+escape(dayLabel(d.date))+'</span><div class="step-track"><span class="bar-fill" style="width:'+Math.max(2,d.steps.value/max*100)+'%"></span>'+(number(goal)?'<span class="goal-mark" style="left:'+Math.min(99,goal/max*100)+'%" title="Meta '+escape(fmt(goal))+'"></span>':'')+'</div><small>'+escape(fmt(d.steps.value))+(number(goal)?' / '+escape(fmt(goal)):'')+'</small></div>';
+  }
+  return section('Pasos diarios',html);
+}
+function sessionList(days){
+  if(!days.length)return '';
+  let html='';
+  for(const d of [...days].reverse()){
+    html+='<div class="activity-day"><strong>'+escape(date(d.date))+'</strong><small>'+d.count+' '+(d.count===1?'actividad':'actividades')+(number(d.duration_seconds)?' · '+escape(duration(d.duration_seconds))+(d.duration_complete?'':' (parcial)'):'')+'</small>';
+    for(const s of [...d.sessions].sort((a,b)=>(sessionDate(a)||'').localeCompare(sessionDate(b)||''))){
+      html+='<button class="session" data-session="'+escape(s.id)+'"><span><b>'+escape(activityName(s))+'</b><small>'+escape(sessionDate(s)?.length>10?sessionDate(s).slice(11,16):'Hora no informada')+(number(auto(s).duration_seconds)?' · '+escape(duration(auto(s).duration_seconds)):'')+'</small></span><span class="arrow" aria-hidden="true">↗</span></button>';
+    }
+    html+='</div>';
+  }
+  return section('Mis entrenamientos',html);
+}
+function compareRows(headA,headB,rows){
+  const valid=rows.filter(r=>r[1]!=null&&r[2]!=null);
+  if(!valid.length)return '';
+  return '<div class="compare-heading"><span>Dato</span><span>'+escape(headA)+'</span><span>'+escape(headB)+'</span></div>'+valid.map(r=>'<div class="compare"><span>'+escape(r[0])+'</span><strong>'+escape(r[1])+'</strong><strong>'+escape(r[2])+'</strong></div>').join('');
+}
+function activityComparison(){
+  const pair=latestComparable(db.sessions);if(!pair)return '';
+  const a=pair.latest,b=pair.previous;
+  const rows=[
+    ['Duración',duration(auto(a).duration_seconds),duration(auto(b).duration_seconds)],
+    ['Calorías de actividad',unit(auto(a).active_calories_kcal,'kcal'),unit(auto(b).active_calories_kcal,'kcal')],
+    ['FC media',unit(auto(a).heart_rate?.average_bpm,'lpm'),unit(auto(b).heart_rate?.average_bpm,'lpm')],
+    ['FC máxima',unit(auto(a).heart_rate?.max_bpm,'lpm'),unit(auto(b).heart_rate?.max_bpm,'lpm')],
+    ['Esfuerzo percibido',unit(manual(a).rpe,'/ 10'),unit(manual(b).rpe,'/ 10')],
+    ['Ejercicios',exercises(a).length||null,exercises(b).length||null],
+    ['Series',sessionSetCount(a),sessionSetCount(b)]
+  ];
+  const av=volume([a]),bv=volume([b]);if(av.complete&&bv.complete)rows.push(['Volumen',unit(av.value,'kg·rep'),unit(bv.value,'kg·rep')]);
+  const loadBy=s=>{
+    const result=new Map();
+    for(const e of exercises(s))for(const set of sets(e)){
+      if(!e.catalog_id||!number(set.load_kg)||!set.load_basis||set.load_basis==='unknown')continue;
+      const key=e.catalog_id+'|'+set.load_basis,old=result.get(key);
+      if(!old||set.load_kg>old.load)result.set(key,{name:e.name||e.name_original,load:set.load_kg,basis:set.load_basis});
+    }
+    return result;
+  };
+  const la=loadBy(a),lb=loadBy(b);
+  for(const [key,v] of la)if(lb.has(key))rows.push([v.name+' · '+(basis[v.basis]||v.basis),unit(v.load,'kg'),unit(lb.get(key).load,'kg')]);
+  const body=compareRows(dayLabel(sessionDay(a)),dayLabel(sessionDay(b)),rows);
+  return body?section('Última actividad vs anterior · '+activityName(a),body):'';
+}
+function dayComparison(days){
+  if(days.length<2)return '';
+  const a=days.at(-1),b=days.at(-2);
+  const byDate=new Map((db.daily_activity||[]).map(d=>[d.date,d]));
+  const rows=[['Actividades',a.count,b.count],['Tiempo total',a.duration_complete?duration(a.duration_seconds):null,b.duration_complete?duration(b.duration_seconds):null],['Calorías de actividad',a.calories_complete?unit(a.active_calories_kcal,'kcal'):null,b.calories_complete?unit(b.active_calories_kcal,'kcal'):null],['FC máxima',unit(a.max_bpm,'lpm'),unit(b.max_bpm,'lpm')],['FC media ponderada',unit(a.average_bpm,'lpm'),unit(b.average_bpm,'lpm')],['Pasos',byDate.get(a.date)?.steps?.value,byDate.get(b.date)?.steps?.value]];
+  return section('Último día activo vs anterior',compareRows(dayLabel(a.date),dayLabel(b.date),rows));
+}
+function weeklyPanel(days){
+  const allDays=new Set([...days.map(d=>d.date),...(db.daily_activity||[]).filter(d=>number(d.steps?.value)).map(d=>d.date)]);
+  const weeks=weeklyActivity(db.sessions,db.daily_activity||[]);
+  if(allDays.size<3||weeks.length<2)return '';
+  const html=[...weeks].reverse().map(w=>{
+    let bits=[];if(w.sessions)bits.push(w.sessions+' sesiones',w.activeDays+' días activos');
+    if(w.durationDays)bits.push(duration(w.duration_seconds)+(w.durationCompleteDays<w.activeDays?' (parcial)':''));
+    if(w.steps.length)bits.push('Pasos: '+fmt(sum(w.steps)/w.steps.length));
+    if(w.goalsKnown)bits.push('Meta: '+w.goalsMet+'/'+w.goalsKnown+' días');
+    return '<div class="week-row"><strong>Semana del '+escape(date(w.week))+'</strong><div class="week-metrics">'+bits.map(v=>'<span>'+escape(v)+'</span>').join('')+'</div></div>';
+  }).join('');
+  return section('Constancia por semana',html);
+}
+function zonesPanel(sessions,individual=false){
+  const zones=groupedZones(sessions);if(!zones.length)return '';
+  const total=sum(zones.map(z=>z.seconds));
+  const body=zones.map(z=>'<div class="zone"><div class="zone-title"><span>'+escape(z.name)+(number(z.lower_bpm)&&number(z.upper_bpm)?' · '+escape(z.lower_bpm)+'–'+escape(z.upper_bpm)+' lpm':'')+'</span><strong>'+escape(duration(z.seconds))+'</strong></div><div class="zone-bar"><span style="width:'+(total?z.seconds/total*100:0)+'%"></span></div></div>').join('');
+  return section(individual?'Zonas de esta sesión':'Tiempo acumulado por zonas',body);
+}
+function effectsPanel(sessions,individual=false){
+  const entries=sessions.flatMap(s=>(auto(s).training_effect||[]).filter(e=>e.value!=null).map(e=>({date:sessionDay(s),name:e.label,value:e.value,unit:e.unit,scale:e.scale})));
+  if(!entries.length)return '';
+  return section('Efecto del entrenamiento',entries.map(e=>'<div class="effect-row"><span><strong>'+escape(e.name)+'</strong>'+(!individual?'<small>'+escape(date(e.date))+'</small>':'')+'</span><span class="effect-value">'+escape(e.value)+(e.unit?' '+escape(e.unit):'')+(e.scale?'<small> / '+escape(e.scale)+'</small>':'')+'</span></div>').join(''));
+}
+function chart(title,points,unitName){
+  const p=points.filter(x=>x.date&&number(x.value)).sort((a,b)=>a.date.localeCompare(b.date));
+  if(p.length<2)return '';
+  const max=Math.max(1,...p.map(x=>x.value)),min=Math.min(0,...p.map(x=>x.value));
+  const at=p.map((x,i)=>[35+i/(p.length-1)*610,145-(x.value-min)/(max-min)*122]);
+  const svg='<svg class="chart" viewBox="0 0 680 165" role="img" aria-label="'+escape(title)+'; valores exactos en el detalle"><line x1="35" y1="145" x2="645" y2="145" stroke="#e8e1dc"/><polyline fill="none" stroke="#966f79" stroke-width="2.5" points="'+at.map(x=>x.join(',')).join(' ')+'"/>'+at.map((x,i)=>'<circle cx="'+x[0]+'" cy="'+x[1]+'" r="4" fill="#966f79"><title>'+escape(date(p[i].date))+': '+escape(fmt(p[i].value,1))+' '+escape(unitName)+'</title></circle>').join('')+'<text x="0" y="16" fill="#756f6a" font-size="11">'+escape(fmt(max,1))+'</text></svg>';
+  const table='<details><summary>Ver valores</summary><div class="scroll"><table><thead><tr><th>Fecha</th><th>Valor</th></tr></thead><tbody>'+p.map(x=>'<tr><td>'+escape(date(x.date))+'</td><td>'+escape(fmt(x.value,1))+' '+escape(unitName)+'</td></tr>').join('')+'</tbody></table></div></details>';
+  return section(title,'<div class="chart-wrap">'+svg+'<div class="chart-labels"><span>'+escape(dayLabel(p[0].date))+'</span><span>'+escape(dayLabel(p.at(-1).date))+'</span></div></div>'+table);
+}
+function exercisePanel(){
+  const s=db.sessions,occurrences=new Map();
+  for(const row of s)for(const e of exercises(row)){const key=e.catalog_id||e.id;if(!occurrences.has(key))occurrences.set(key,{name:e.name||e.name_original,dates:new Set()});occurrences.get(key).dates.add(sessionDay(row));}
+  const choices=[...occurrences].filter(([,x])=>x.dates.size>=2);
+  if(!choices.length)return '';
+  const options=choices.map(([id,x])=>'<option value="'+escape(id)+'">'+escape(x.name)+'</option>').join('');
+  return section('Evolución por ejercicio','<label class="muted" for="exerciseSelect">Ejercicio</label><select id="exerciseSelect" class="exercise-select">'+options+'</select><div id="exerciseContent"></div>');
+}
+function renderExercise(){
+  const id=$('#exerciseSelect')?.value;if(!id)return;
+  const rows=exerciseRows(db.sessions,id);
+  const records=personalBests(rows);
+  let out='';
+  if(records.length>=1&&new Set(rows.map(r=>sessionDay(r.session))).size>=2){
+    out+='<h3>Mayor carga registrada</h3>'+records.map(r=>'<p class="muted">'+escape(fmt(r.set.load_kg,1))+' kg · '+escape(basis[r.set.load_basis]||r.set.load_basis)+' · '+escape(date(r.date))+'</p>').join('');
+  }
+  const bases=[...new Set(rows.filter(r=>number(r.set.load_kg)&&r.set.load_basis&&r.set.load_basis!=='unknown').map(r=>r.set.load_basis))];
+  for(const b of bases){
+    const byDay=new Map();
+    for(const r of rows.filter(r=>r.set.load_basis===b&&number(r.set.load_kg))){const k=sessionDay(r.session),old=byDay.get(k);if(!old||r.set.load_kg>old.value)byDay.set(k,{date:k,value:r.set.load_kg});}
+    out+=chart('Carga · '+(basis[b]||b),[...byDay.values()],'kg');
+  }
+  const bySession=new Map();
+  for(const r of rows)if(!bySession.has(r.session.id))bySession.set(r.session.id,{date:sessionDay(r.session),sets:0});
+  for(const r of rows)if(number(r.set.set_count))bySession.get(r.session.id).sets+=r.set.set_count;
+  out+=chart('Series por sesión',[...bySession.values()].filter(r=>r.sets>0).map(r=>({date:r.date,value:r.sets})),'series');
+  $('#exerciseContent').innerHTML=out;
+}
+function extraTrends(days){
+  if(days.length<2)return '';
+  let out='';
+  out+=chart('Calorías de actividad por día',days.filter(d=>d.calories_complete).map(d=>({date:d.date,value:d.active_calories_kcal})),'kcal');
+  out+=chart('FC máxima por día',days.map(d=>({date:d.date,value:d.max_bpm})),'lpm');
+  out+=chart('FC media diaria ponderada',days.map(d=>({date:d.date,value:d.average_bpm})),'lpm');
+  const rpe=db.sessions.map(s=>({date:sessionDate(s),value:manual(s).rpe}));
+  out+=chart('Esfuerzo percibido por sesión',rpe,'/ 10');
+  return out;
+}
+function detailGrid(items){return '<div class="detail-grid">'+items.filter(x=>x[1]!=null&&x[1]!=='').map(x=>'<div><small>'+escape(x[0])+'</small><strong>'+escape(x[1])+'</strong></div>').join('')+'</div>';}
 function safePath(path){return typeof path==='string'&&/^evidence\/[a-zA-Z0-9_./-]+$/.test(path)&&!path.includes('..')?path:null;}
-function showSession(s){const a=auto(s),m=manual(s);let html=`<p class="eyebrow">REGISTRO DE ENTRENAMIENTO</p><h2>${escape(activityName(s))}</h2><p class="subtle">${escape(date(sessionDate(s)))}</p>`;
-const ap=[['Fecha y hora visibles',a.started_at_local?date(a.started_at_local):null],['Actividad',a.activity],['Duración',duration(a.duration_seconds)],['Calorías de actividad',valueText(a.active_calories_kcal,'kcal')],['Calorías totales',valueText(a.total_calories_kcal,'kcal')],['FC media',valueText(a.heart_rate?.average_bpm,'lpm')],['FC máxima',valueText(a.heart_rate?.max_bpm,'lpm')],['Dispositivo visible',a.device],...(a.extra_metrics||[]).map(x=>[x.label,x.value==null?null:String(x.value)+(x.unit?' '+x.unit:'')])];
-if(ap.some(([,v])=>v!=null))html+=`<div class="detail-group">${sourceTag('Mi Fitness · Datos de la captura')}${detailGrid(ap)}</div>`;
-html+=zonesPanel([s])+trainingEffects([s]);
-if((a.zones||[]).some(z=>number(z.percent)))html+=section('Zonas · Porcentajes visibles',table(['Zona','Porcentaje','Tiempo'],a.zones.map(z=>[z.name,valueText(z.percent,'%'),duration(z.seconds)])),'Mi Fitness · Porcentajes originales; no se convierten en tiempos estimados.');
-const samples=(a.heart_rate?.samples||[]).filter(v=>number(v.elapsed_seconds)&&number(v.bpm));if(samples.length)html+=section('Frecuencia cardíaca registrada',table(['Tiempo transcurrido','FC (lpm)'],samples.map(p=>[duration(p.elapsed_seconds),p.bpm])),'Puntos con valores legibles en la fuente. No se interpolan mediciones.');
-if(a.heart_rate?.curve_note)html+=section('Curva de frecuencia cardíaca',`<p class="context">${escape(a.heart_rate.curve_note)}</p>`,'Descripción visual de la captura; no es una serie numérica medida.');
-const mp=[['Fecha informada',m.performed_at_local?date(m.performed_at_local):null],['Actividad informada',m.activity],['Dispositivo informado',m.device],['Sensación general',m.feeling],['Esfuerzo percibido',valueText(m.rpe,'/ 10')],['Sueño',valueText(m.context?.sleep_hours,'h')],['Calidad de sueño',m.context?.sleep_quality],['Estrés',m.context?.stress],['Energía',m.context?.energy],['Cansancio',m.context?.fatigue],['Molestias',m.context?.discomfort],['Contexto',m.context?.notes],...(m.extra_metrics||[]).map(x=>[x.label,x.value==null?null:String(x.value)+(x.unit?' '+x.unit:'')])];
-if(mp.some(([,v])=>v!=null))html+=`<div class="detail-group">${sourceTag('Tus anotaciones · Manual','manual')}${detailGrid(mp)}</div>`;
-for(const e of exercises(s)){html+=section(e.name||e.name_original,`<p class="subtle">Nombre original: ${escape(e.name_original)}${e.muscle_groups?.length?' · '+escape(e.muscle_groups.join(', ')):''}</p>`+(sets(e).length?table(['Series','Reps','Carga (kg)','Base','Tiempo','Descanso','Observaciones'],sets(e).map(t=>[t.set_count,t.reps,t.load_kg,t.load_basis?basis[t.load_basis]||t.load_basis:null,duration(t.duration_seconds),duration(t.rest_seconds),t.notes])):'')+(e.notes?`<p class="context">${escape(e.notes)}</p>`:''),'Manual');}
-const evidence=(a.evidence||[]).filter(e=>safePath(e.path));if(evidence.length)html+=section('Capturas originales',evidence.map(e=>`<a href="${escape(e.path)}" target="_blank" rel="noopener"><img class="evidence" src="${escape(e.path)}" alt="${escape(e.description||'Resumen original de Mi Fitness')}" loading="lazy"></a>`).join(''));
-if(a.visible_text)html+=`<details><summary>Transcripción visible de la captura</summary><p class="context">${escape(a.visible_text)}</p></details>`;
-if(m.original_text)html+=`<details><summary>Tus comentarios originales</summary><p class="context">${escape(m.original_text)}</p></details>`;
-if(a.uncertainties?.length)html+=section('Lectura pendiente de aclaración',`<p class="context">${escape(a.uncertainties.join('\n'))}</p>`);
-if(s.notes)html+=`<p class="note">${escape(s.notes)}</p>`;
-$('#detailBody').innerHTML=html;$('#detail').showModal();}
-$('#how').onclick=()=>$('#guide').showModal();document.querySelectorAll('dialog .close').forEach(b=>b.onclick=()=>b.closest('dialog').close());document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}}));
-$('#overviewTab').onclick=()=>{view='overview';render();};$('#historyTab').onclick=()=>{view='history';render();};['fromDate','toDate','activity'].forEach(id=>$('#'+id).onchange=render);$('#clear').onclick=()=>{['fromDate','toDate','activity'].forEach(id=>$('#'+id).value='');render();};
-$('#export').disabled=true;$('#export').onclick=()=>{if(!db)return;const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='mica-historial.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
-try{const r=await fetch('history.json',{cache:'no-store'});if(!r.ok)throw new Error('http');db=await r.json();if(!Array.isArray(db.sessions))throw new Error('schema');for(const name of [...new Set(db.sessions.map(activityName))]){const option=document.createElement('option');option.value=name;option.textContent=name;$('#activity').append(option);}$('#status').textContent='';$('#export').disabled=false;render();}catch{ $('#status').textContent='No se pudo cargar el historial. Volvé a abrir el tablero para reintentar.'; }
+function showSession(s){
+  const a=auto(s),m=manual(s);
+  let html='<h2>'+escape(activityName(s))+'</h2><p class="muted">'+escape(date(sessionDate(s)))+'</p>';
+  const ap=[['Duración',duration(a.duration_seconds)],['Calorías de actividad',unit(a.active_calories_kcal,'kcal')],['Calorías totales',unit(a.total_calories_kcal,'kcal')],['FC media',unit(a.heart_rate?.average_bpm,'lpm')],['FC máxima',unit(a.heart_rate?.max_bpm,'lpm')],['Dispositivo',a.device],...(a.extra_metrics||[]).map(x=>[x.label,x.value==null?null:String(x.value)+(x.unit?' '+x.unit:'')])];
+  if(ap.some(x=>x[1]!=null))html+='<div class="detail-group"><span class="tag">Mi Fitness · Captura</span>'+detailGrid(ap)+'</div>';
+  html+=zonesPanel([s],true)+effectsPanel([s],true);
+  if((a.zones||[]).some(z=>number(z.percent)))html+=section('Porcentajes por zona',detailGrid(a.zones.map(z=>[z.name,number(z.percent)?fmt(z.percent,1)+' %':null])));
+  if(a.heart_rate?.curve_note)html+='<p class="muted">'+escape(a.heart_rate.curve_note)+'</p>';
+  const samples=(a.heart_rate?.samples||[]).filter(x=>number(x.elapsed_seconds)&&number(x.bpm));
+  if(samples.length)html+=section('FC registrada',samples.map(x=>'<div class="compare"><span>'+escape(duration(x.elapsed_seconds))+'</span><strong>'+escape(x.bpm)+' lpm</strong></div>').join(''));
+  const mp=[['Sensación',m.feeling],['Esfuerzo percibido',unit(m.rpe,'/ 10')],['Sueño',unit(m.context?.sleep_hours,'h')],['Calidad de sueño',m.context?.sleep_quality],['Estrés',m.context?.stress],['Energía',m.context?.energy],['Cansancio',m.context?.fatigue],['Molestias',m.context?.discomfort],['Contexto',m.context?.notes]];
+  if(mp.some(x=>x[1]!=null))html+='<div class="detail-group"><span class="tag">Informado por Mica</span>'+detailGrid(mp)+'</div>';
+  for(const e of exercises(s)){
+    let body='<p class="muted">Nombre original: '+escape(e.name_original)+(e.muscle_groups?.length?' · '+escape(e.muscle_groups.join(', ')):'')+'</p>';
+    body+=sets(e).map(t=>'<div class="activity-day"><strong>'+escape(number(t.set_count)?t.set_count+' series':'Serie')+'</strong><small>'+[number(t.reps)?t.reps+' reps':null,number(t.load_kg)?fmt(t.load_kg,1)+' kg'+(t.load_basis?' · '+(basis[t.load_basis]||t.load_basis):''):null,number(t.duration_seconds)?duration(t.duration_seconds):null,number(t.rest_seconds)?'Descanso '+duration(t.rest_seconds):null,t.notes].filter(Boolean).map(escape).join(' · ')+'</small></div>').join('');
+    if(e.notes)body+='<p class="muted">'+escape(e.notes)+'</p>';
+    html+=section(e.name||e.name_original,body);
+  }
+  const evidence=(a.evidence||[]).filter(x=>safePath(x.path));
+  if(evidence.length)html+=section('Captura',evidence.map(x=>'<img class="evidence" src="'+escape(x.path)+'" alt="'+escape(x.description||'Resumen Mi Fitness')+'">').join(''));
+  if(a.visible_text)html+='<details><summary>Texto visible de la captura</summary><p class="context">'+escape(a.visible_text)+'</p></details>';
+  if(m.original_text)html+='<details><summary>Comentarios originales</summary><p class="context">'+escape(m.original_text)+'</p></details>';
+  if(a.uncertainties?.length)html+='<p class="muted">'+escape(a.uncertainties.join('; '))+'</p>';
+  $('#detailBody').innerHTML=html;$('#detail').showModal();
+}
+function render(){
+  if(!db)return;
+  const days=dailyTraining(db.sessions);
+  if(!db.sessions.length&&!(db.daily_activity||[]).length){$('#content').innerHTML='<section class="section empty"><h2>Tu historia empieza acá</h2><p>Mandá tu primera captura o los pasos del día en este chat.</p></section>';return;}
+  let html=mainCards(days)+dailyCharts(days)+stepsChart()+activityComparison()+dayComparison(days)+sessionList(days)+weeklyPanel(days)+zonesPanel(db.sessions)+effectsPanel(db.sessions)+secondaryCards()+exercisePanel()+extraTrends(days);
+  $('#content').innerHTML=html;
+  document.querySelectorAll('[data-session]').forEach(b=>b.onclick=()=>showSession(db.sessions.find(s=>s.id===b.dataset.session)));
+  if($('#exerciseSelect')){$('#exerciseSelect').onchange=renderExercise;renderExercise();}
+}
+$('#how').onclick=()=>$('#guide').showModal();
+document.querySelectorAll('dialog .close').forEach(b=>b.onclick=()=>b.closest('dialog').close());
+$('#export').disabled=true;
+$('#export').onclick=()=>{if(!db)return;const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='mica-historial.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+try{const r=await fetch('history.json',{cache:'no-store'});if(!r.ok)throw new Error('http');db=await r.json();if(!Array.isArray(db.sessions)||!Array.isArray(db.daily_activity))throw new Error('schema');$('#status').textContent='';$('#export').disabled=false;render();}catch{$('#status').textContent='No se pudo cargar el historial. Volvé a abrir el tablero para reintentar.';}

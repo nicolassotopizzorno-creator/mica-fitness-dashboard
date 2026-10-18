@@ -2,18 +2,32 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Historial Mica",
   "type": "object",
-  "required": ["schema_version", "profile", "sessions", "exercise_catalog"],
+  "required": ["schema_version", "profile", "sessions", "exercise_catalog", "daily_activity"],
   "properties": {
-    "schema_version": {"const": "1.0.0"},
+    "schema_version": {"const": "1.1.0"},
     "profile": {"type": "object", "properties": {"source": {"const": "user_reported"}}},
     "updated_at": {"type": ["string", "null"]},
     "exercise_catalog": {"type": "array", "items": {"type": "object", "required": ["id", "name"], "properties": {"id": {"type": "string"}, "name": {"type": "string"}, "family_id": {"type": ["string", "null"]}, "aliases": {"type": "array", "items": {"type": "string"}}, "equipment": {"type": ["string", "null"]}, "normalization_note": {"type": ["string", "null"]}}}},
-    "sessions": {"type": "array", "items": {"$ref": "#/$defs/session"}}
+    "sessions": {"type": "array", "items": {"$ref": "#/$defs/session"}},
+    "daily_activity": {"type": "array", "items": {"$ref": "#/$defs/daily"}}
   },
   "$defs": {
     "text": {"type": ["string", "null"]},
     "nonnegative": {"type": ["number", "null"], "minimum": 0},
     "count": {"type": ["integer", "null"], "minimum": 0},
+    "day": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "source": {"enum": ["mi_fitness_screenshot", "user_reported"]},
+    "daily_value": {"type": "object", "required": ["value", "source"], "properties": {"value": {"$ref": "#/$defs/nonnegative"}, "source": {"$ref": "#/$defs/source"}, "original_text": {"$ref": "#/$defs/text"}, "note": {"$ref": "#/$defs/text"}}},
+    "daily_metric": {"type": "object", "required": ["key", "label", "value", "source"], "properties": {"key": {"type": "string"}, "label": {"type": "string"}, "value": {"type": ["number", "string", "boolean", "null"]}, "unit": {"$ref": "#/$defs/text"}, "source": {"$ref": "#/$defs/source"}, "note": {"$ref": "#/$defs/text"}}},
+    "daily": {"type": "object", "required": ["date"], "properties": {
+      "date": {"$ref": "#/$defs/day"},
+      "steps": {"type": ["object", "null"], "properties": {"value": {"type": "integer", "minimum": 0}, "source": {"$ref": "#/$defs/source"}, "original_text": {"$ref": "#/$defs/text"}}, "required": ["value", "source"]},
+      "step_goal": {"type": ["object", "null"], "properties": {"value": {"type": "integer", "minimum": 0}, "source": {"$ref": "#/$defs/source"}, "original_text": {"$ref": "#/$defs/text"}}, "required": ["value", "source"]},
+      "distance_km": {"type": ["object", "null"], "properties": {"value": {"$ref": "#/$defs/nonnegative"}, "source": {"$ref": "#/$defs/source"}, "original_text": {"$ref": "#/$defs/text"}}, "required": ["value", "source"]},
+      "extra_metrics": {"type": "array", "items": {"$ref": "#/$defs/daily_metric"}},
+      "comments": {"type": "array", "items": {"type": "object", "required": ["text", "source"], "properties": {"text": {"type": "string"}, "source": {"const": "user_reported"}}}},
+      "audit": {"type": "array", "items": {"type": "object", "properties": {"at": {"type": "string"}, "action": {"type": "string"}, "reason": {"type": "string"}, "changes": {"type": "array"}}}}
+    }},
     "date": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2}(:\\d{2})?)?$"},
     "metric": {"type": "object", "required": ["key", "label", "value"], "properties": {"key": {"type": "string"}, "label": {"type": "string"}, "value": {"type": ["number", "string", "boolean", "null"]}, "unit": {"$ref": "#/$defs/text"}, "scale": {"$ref": "#/$defs/text"}, "note": {"$ref": "#/$defs/text"}}},
     "set": {"type": "object", "properties": {

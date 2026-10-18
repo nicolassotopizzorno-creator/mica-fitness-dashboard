@@ -2,22 +2,20 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#f7f8f2">
-  <title>Mica · Tu historial de entrenamiento</title>
-  <meta name="description" content="Tu entrenamiento, con perspectiva. Historial personal de Mi Fitness y anotaciones de Mica.">
+  <meta name="theme-color" content="#faf7f4">
+  <title>Mica · Mi actividad</title>
+  <meta name="description" content="Entrenamientos, movimiento y hábitos de Mica.">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header><a class="brand" href="./" aria-label="Mica, inicio"><span class="brand-icon">m<span>✳</span></span><span>mica<span class="brand-sub">TU DIARIO DE MOVIMIENTO</span></span></a><span class="private"><span aria-hidden="true">◈</span> Espacio personal</span></header>
+  <header class="site-header"><a class="brand" href="./" aria-label="Mica, inicio"><svg class="elephant" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 17C11 9 16 5 24 5s13 4 13 12v12c0 5-3 8-7 8h-2v2c0 3-2 5-4 5s-4-2-4-5v-2h-2c-4 0-7-3-7-8V17Z"/><path d="M11 17c-5-3-8-1-8 5s3 9 8 8m26-13c5-3 8-1 8 5s-3 9-8 8M20 29v8m8-8v8"/><circle cx="18" cy="22" r="1" fill="currentColor" stroke="none"/><circle cx="30" cy="22" r="1" fill="currentColor" stroke="none"/></svg><span>Mica</span></a><button id="how" class="text-button">Cómo registrar</button></header>
   <main>
-    <div class="intro"><div><p class="eyebrow">UN ENTRENAMIENTO A LA VEZ</p><h1>Tu esfuerzo.<br><span>Tu perspectiva.</span></h1><p class="intro-text">Un lugar para mirar lo que hacés, cómo te sentís<br class="desktop"> y cómo cambia tu entrenamiento con el tiempo.</p></div><div class="intro-mark" aria-hidden="true"><svg viewBox="0 0 200 180"><path d="M25 132C25 70 85 20 140 35S189 130 125 143S75 109 92 84S145 83 144 107"/><circle cx="25" cy="132" r="8"/><circle cx="144" cy="107" r="8"/></svg><span>EL PROCESO TAMBIÉN CUENTA</span></div></div>
-    <div class="toolbar"><div class="tabs"><button id="overviewTab" class="tab active" aria-pressed="true">Mi progreso</button><button id="historyTab" class="tab" aria-pressed="false">Historial</button></div><button id="how" class="button dark"><span aria-hidden="true">＋</span> Registrar entrenamiento</button></div>
-    <div id="status" role="status">Cargando tu historial…</div>
-    <div id="filters" class="filters" hidden><label>Desde<input type="date" id="fromDate"></label><label>Hasta<input type="date" id="toDate"></label><label>Actividad<select id="activity"><option value="">Todas las actividades</option></select></label><button class="button quiet" id="clear">Limpiar filtros</button></div>
+    <div class="page-title"><h1>Mi actividad</h1><p>Entrenamientos y movimiento, a mi ritmo.</p></div>
+    <div id="status" role="status">Cargando historial…</div>
     <div id="content"></div>
-    <footer><div><strong>Lo que medís + lo que sentís.</strong><p>Mi Fitness y tus anotaciones, siempre identificados por su fuente.</p></div><button id="export" class="button quiet">Descargar historial <span aria-hidden="true">↗</span></button></footer>
+    <footer><span>Lo que medís y lo que sentís.</span><button id="export" class="text-button">Descargar historial ↗</button></footer>
   </main>
-  <dialog id="guide"><button class="close" aria-label="Cerrar">×</button><p class="eyebrow">ASÍ SE CONSTRUYE TU HISTORIAL</p><h2>Vos entrenás.<br>Acá queda el registro.</h2><ol class="steps"><li><strong>Mandá la captura en este chat</strong><p>Escribí “Entrenamiento de hoy” y adjuntá el resumen de Mi Fitness. Incluí todas las pantallas que quieras registrar.</p></li><li><strong>Sumá lo que el reloj no sabe</strong><p>Ejercicios, series, repeticiones, peso, esfuerzo del 1 al 10 o cómo te sentiste. Todo es opcional.</p></li><li><strong>Revisá el registro actualizado</strong><p>Con cada envío, el asistente puede actualizar el historial y publicar una nueva versión del tablero.</p></li></ol><div class="note">La carga se hace desde el chat. No hay conexión directa con Mi Fitness ni sincronización automática con el reloj.</div></dialog>
+  <dialog id="guide"><button class="close" aria-label="Cerrar">×</button><h2>Registrar actividad</h2><p>Mandá “Entrenamiento de hoy” y la captura de Mi Fitness en este chat. Podés sumar ejercicios, pesos y cómo te sentiste.</p><p>Para pasos diarios, escribí la cantidad y la fecha si no es de hoy. Los pasos se guardan por día, separados de los entrenamientos.</p><p>El tablero se actualiza después de registrar los datos en GitHub.</p></dialog>
   <dialog id="detail"><button class="close" aria-label="Cerrar">×</button><div id="detailBody"></div></dialog>
   <script type="module" src="app.js"></script>
 </body></html>

@@ -1,21 +1,24 @@
 # Tablero Mica: instrucciones para futuros chats
 
-Este repositorio es la fuente de verdad del dashboard Mica. GitHub Pages sirve `dist/`; el historial canónico es `dist/history.json`. Cuando el usuario envíe “Entrenamiento de hoy” con capturas de Mi Fitness y comentarios, leer primero la versión actual del JSON en GitHub, actualizarla, validar, guardar un commit en `main` y comprobar la publicación. La conexión GitHub de ChatGPT permite actualizar el archivo desde futuros chats. Leer también `README.md`, `data/history.schema.json` y `data/session-template.json`.
+Este repositorio es la fuente de verdad. GitHub Pages publica dist/ desde main. Antes de escribir, leer siempre la versión actual de dist/history.json, este archivo, README.md y data/history.schema.json en GitHub. La copia local puede estar desactualizada. El repositorio y el sitio son públicos.
 
-## Registro
+## Sesiones individuales
 
-1. No crear sesiones sin una actividad real. Antes de insertar, revisar hash SHA-256 de capturas cuando estén disponibles, fecha, tipo de actividad y duración para detectar duplicados. Si el mensaje completa una sesión existente, conservar su `id` y editarla. Ante coincidencia dudosa, guardar los datos seguros y pedir aclaración.
-2. `automatic` contiene solo lo visible en capturas de Mi Fitness. `manual` contiene solo lo informado por el usuario. El dispositivo del perfil es declarado por el usuario y no prueba qué reloj registró una sesión. Conservar texto original, nombre original del ejercicio y notas de normalización.
-3. Desconocido = `null` o campo ausente. Cero solo indica un cero visible o informado. Mantener precisión de fecha/hora; no inferir hora ni zona. Guardar zonas, efecto y métricas adicionales con sus etiquetas, unidades y escalas originales. Una curva de FC sin valores numéricos legibles se conserva como descripción o captura, nunca como serie exacta estimada.
-4. `manual.exercises` admite 0, 1 o muchos ejercicios, con series heterogéneas y campos parciales. No inferir grupos musculares, equipamiento, base de peso, descansos ni repeticiones. Normalizar variantes con cautela sin perder `name_original`.
-5. Agregar un evento `audit` al crear o corregir. No borrar datos previos sin una corrección trazable.
+- sessions contiene entrenamientos individuales. Gimnasio por la mañana y Pilates por la tarde son dos sesiones con IDs distintos, incluso si comparten fecha. Nunca sobrescribir una sesión por coincidir el día.
+- Antes de crear una sesión, revisar hash de captura si existe, fecha, hora, tipo y duración. La fecha sola no prueba duplicidad. Si el mensaje agrega información a una sesión existente, mantener su ID y actualizarla con un evento audit.
+- automatic contiene exclusivamente datos visibles en capturas de Mi Fitness; manual contiene exclusivamente lo informado por Mica. El dispositivo del perfil no prueba el dispositivo de una sesión. No completar ausencias con cero ni inventar cifras de una curva de FC.
+- manual.exercises acepta 0, 1 o muchos ejercicios con series y campos parciales. Conservar nombre original, variante, base de carga, descansos y observaciones sin inferir valores.
 
-## Publicación y análisis
+## Actividad diaria
 
-- Ejecutar `node scripts/validate.mjs`, `node --test tests/metrics.test.js`, `node --check dist/app.js` y `node scripts/build-standalone.mjs`. Actualizar las pruebas solo si cambia el comportamiento. Incluir `dist/history.json` y la copia autónoma `mica-tablero.html` en el commit.
-- Un cambio en `dist/**` en `main` activa el workflow de Pages. Confirmar el despliegue antes de afirmar que la web está actualizada.
-- Mostrar tarjetas solo con datos reales y evoluciones solo con al menos dos puntos fechados. El volumen requiere series × repeticiones × carga externa total conocida; indicar si es parcial. No sumar calorías activas con totales.
-- Al comparar, considerar actividad, duración, RPE, sueño, molestias, cansancio y contexto. Una FC menor, más calorías o una puntuación distinta no prueba mejora por sí sola.
-- Explicar qué quedó registrado y qué sigue desconocido.
+- daily_activity es distinta de sessions. Pasos, meta, distancia y futuras métricas generales se guardan en un solo registro por fecha YYYY-MM-DD. Los pasos nunca crean un entrenamiento.
+- Si llega un nuevo número de pasos para una fecha existente, actualizar ese registro, conservar la fuente de cada valor y agregar audit. Las fuentes válidas son mi_fitness_screenshot para lo visible en una captura y user_reported para lo declarado. Si “hoy” no se puede resolver con la fecha local del usuario, pedir la fecha.
+- Para el resumen diario, agrupar sesiones por fecha sin fusionarlas: cantidad, duración y calorías de actividad sumadas, FC máxima observada. La FC media diaria solo se calcula ponderada por duración cuando todas las sesiones del día tienen duración positiva y FC media conocida.
+- Las zonas se acumulan entre sesiones solo si todas tienen los mismos nombres y límites BPM explícitos. No sumar puntuaciones de efecto del entrenamiento. Comparar la última actividad con la anterior del mismo tipo; no equiparar Pilates con gimnasio. Mostrar diferencias sin calificarlas como mejora o empeoramiento.
 
-El repositorio y GitHub Pages son públicos. El JSON y cualquier captura que se suba a `dist/evidence/` serán visibles públicamente. El usuario pidió expresamente GitHub Pages. No volver a usar Sites ni crear otro repositorio.
+## Interfaz y publicación
+
+- Nombre visible: Mica. Vista vertical única, sin filtros de fecha y optimizada para celular. Tarjetas solo con valores reales; barras diarias pueden tener una fecha; tendencias necesitan al menos dos puntos. El volumen exige series × repeticiones × carga externa total conocida y se marca como parcial cuando corresponde.
+- Ejecutar node scripts/validate.mjs, node --test tests/metrics.test.js y node --check dist/app.js. Ejecutar node scripts/build-standalone.mjs para regenerar mica-tablero.html después de cambios.
+- Subir a main los cambios de dist/, esquema, documentación, pruebas y copia autónoma. Confirmar que el workflow de GitHub Pages termine correctamente y que el sitio muestre la versión nueva. Explicar a Mica los datos registrados, faltantes y comparaciones relevantes.
+- Las capturas originales no se suben al repositorio público por defecto. La sesión del 15/10/2026 ya registrada debe permanecer íntegra.

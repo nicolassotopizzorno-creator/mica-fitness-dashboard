@@ -1,13 +1,14 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "profile": {
     "display_name": "Mica",
     "reported_app": "Mi Fitness",
     "reported_device": "Redmi Watch 5 Lite",
     "source": "user_reported"
   },
-  "updated_at": "2026-10-18T10:50:00-03:00",
+  "updated_at": "2026-10-18T12:06:38-03:00",
   "exercise_catalog": [],
+  "daily_activity": [],
   "sessions": [
     {
       "id": "2026-10-15-200528-functional-01",

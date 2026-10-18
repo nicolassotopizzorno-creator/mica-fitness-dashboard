@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {totals,volume,setVolume,personalBests,groupedZones,sessionDate} from '../dist/metrics.js';
+import {totals,volume,setVolume,personalBests,groupedZones,sessionDate,dailyTraining,latestComparable,weeklyActivity} from '../dist/metrics.js';
 const session=(automatic={},manual={})=>({automatic,manual});
 test('Missing measurements stay null and explicit zero stays zero',()=>{
   assert.equal(totals([session()]).duration.value,null);
@@ -24,10 +24,52 @@ test('Best loads remain separated by load basis',()=>{
   assert.equal(result.length,2);assert.deepEqual(result.map(r=>r.set.load_kg),[20,40]);
 });
 test('Identically named zones with different boundaries are not merged',()=>{
-  const result=groupedZones([session({zones:[{name:'Aeróbica',lower_bpm:120,upper_bpm:140,seconds:10},{name:'Aeróbica',lower_bpm:130,upper_bpm:150,seconds:20}]}),session({zones:[{name:'Aeróbica',lower_bpm:120,upper_bpm:140,seconds:30}]})]);
-  assert.equal(result.length,2);assert.equal(result[0].seconds,40);
+  const result=groupedZones([session({zones:[{name:'Aeróbica',lower_bpm:120,upper_bpm:140,seconds:10},{name:'Aeróbica',lower_bpm:130,upper_bpm:150,seconds:20}]})]);
+  assert.equal(result.length,2);assert.equal(result[0].seconds,10);
 });
 test('Manual dates are fallback only; zero exercises is valid',()=>{
   assert.equal(sessionDate(session({}, {performed_at_local:'2026-01-01'})),'2026-01-01');
   assert.equal(sessionDate(session()),null);assert.equal(totals([session()]).exercises,0);
+});
+test('Two separate workouts on one day sum duration and calories, max HR and weighted mean',()=>{
+  const a={id:'gym',...session({started_at_local:'2026-10-16T08:00',activity:'Gimnasio',duration_seconds:3600,active_calories_kcal:200,heart_rate:{average_bpm:100,max_bpm:130}})};
+  const b={id:'pilates',...session({started_at_local:'2026-10-16T17:00',activity:'Pilates',duration_seconds:3000,active_calories_kcal:120,heart_rate:{average_bpm:120,max_bpm:145}})};
+  const result=dailyTraining([a,b]);
+  assert.equal(result.length,1);assert.equal(result[0].count,2);
+  assert.equal(result[0].duration_seconds,6600);assert.equal(result[0].active_calories_kcal,320);
+  assert.equal(result[0].duration_complete,true);assert.equal(result[0].calories_complete,true);
+  assert.equal(result[0].max_bpm,145);assert.equal(result[0].average_bpm,(3600*100+3000*120)/6600);
+  assert.deepEqual(result[0].sessions.map(s=>s.id),['gym','pilates']);
+  assert.equal(dailyTraining([a,{...b,automatic:{...b.automatic,heart_rate:{max_bpm:145}}}])[0].average_bpm,null);
+  const partial=dailyTraining([a,{...b,automatic:{...b.automatic,duration_seconds:null,active_calories_kcal:null}}])[0];
+  assert.equal(partial.duration_seconds,3600);assert.equal(partial.duration_complete,false);
+  assert.equal(partial.active_calories_kcal,200);assert.equal(partial.calories_complete,false);
+});
+test('Zone times from different sessions require the same known boundaries',()=>{
+  const zone={name:'Aeróbico',lower_bpm:120,upper_bpm:140,seconds:20};
+  const a=session({zones:[zone]}),b=session({zones:[{...zone,seconds:10}]});
+  assert.equal(groupedZones([a,b])[0].seconds,30);
+  assert.deepEqual(groupedZones([a,session({zones:[{...zone,lower_bpm:null}]})]),[]);
+  assert.deepEqual(groupedZones([a,session({zones:[{...zone,upper_bpm:150}]})]),[]);
+});
+test('Latest activity compares same type and not Pilates with gym',()=>{
+  const rows=[
+    session({started_at_local:'2026-10-15T10:00',activity:'Gym'}),
+    session({started_at_local:'2026-10-16T10:00',activity:'Pilates'}),
+    session({started_at_local:'2026-10-17T10:00',activity:'Gimnasio'})
+  ];
+  const pair=latestComparable(rows);
+  assert.equal(pair.latest.automatic.activity,'Gimnasio');
+  assert.equal(pair.previous.automatic.activity,'Gym');
+  assert.equal(latestComparable(rows.slice(1)),null);
+});
+test('Daily steps stay separate from sessions and weekly target counts only days with data',()=>{
+  const rows=[
+    {date:'2026-10-12',steps:{value:9430,source:'user_reported'},step_goal:{value:8000,source:'user_reported'}},
+    {date:'2026-10-13',steps:{value:7000,source:'user_reported'},step_goal:{value:8000,source:'user_reported'}}
+  ];
+  const weeks=weeklyActivity([],rows);
+  assert.equal(weeks.length,1);assert.equal(weeks[0].sessions,0);
+  assert.equal(weeks[0].goalsMet,1);assert.equal(weeks[0].goalsKnown,2);
+  assert.deepEqual(weeks[0].steps,[9430,7000]);
 });
